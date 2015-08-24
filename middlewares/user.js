@@ -102,6 +102,7 @@ router.post( '/user', function( req, res, next ){
                                           'post',
                                           req.query );
     userDB.findUserByQuery( query, userSetings, onSuccess, onError );
-}
+});
 
 
+module.exports = router;
