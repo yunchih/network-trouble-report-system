@@ -31,10 +31,10 @@ module.export = {
         init( find, onError );
     },
     
-    getUnreadMessage: function( fbId, onSuccess, onError ){
+    getUnreadMessage: function( fbId, channel, onSuccess, onError ){
         function find( db ){
             var query = {};
-            query.to = fbId;
+            query.channel = channel;
             query["read." + fbId ] = false;
             var result = db.collection("massages").find( query )
                 .sort( { timestamp: 1} );
@@ -43,6 +43,14 @@ module.export = {
         init( find, onError );
     },
 
+    getMessageByMessageId: function( messageId, onSuccess, onError ){
+        function find( db ){
+            var result = db.collection("messages").find( { _id: messageId } );
+            return onSuccess( result );
+        };
+        init( find, onError );
+    },
+    
     setMessageRead: function( fbId, messageId, channel, onSuccess, onError ){
         function set( db ){
             var set = {};
@@ -55,7 +63,7 @@ module.export = {
         init( set, onError );
     },
 
-    getBefore: function( messageId, channel, nMessage, onSuccess, onError ){
+    getMessageBefore: function( messageId, channel, nMessage, onSuccess, onError ){
         function get( db ){
             var result = db.collection("messages")
                 .find( { $lte: { _id: messageId }, channel: channel } )
@@ -65,7 +73,7 @@ module.export = {
         init( get, onError );
     },
 
-    getChannelRead: function( fbId, read, onSuccess, onError ){
+    getChannelsRead: function( fbId, read, onSuccess, onError ){
         function get( db ){
             var query = {};
             query["read." + fbId] = read;
@@ -75,10 +83,10 @@ module.export = {
         init( get, onError );
     },
 
-    getChannelOfUser: function( members, onSuccess, onError ){
+    getChannelsOfUser: function( members, onSuccess, onError ){
         function get( db ){
             var result = db.collection("channel")
-                .find( { member:{ $all: members } } );
+                .find( { members: { $all: members } } );
             return onSuccess( result );
         };
         init( get, onError );
@@ -94,7 +102,7 @@ module.export = {
     },
 
     
-    newChannel: function( channel, onSuccess, onError ){
+    addChannel: function( channel, onSuccess, onError ){
         function insert( db ){ 
             var result = db.collection("channel")
                 .insert( channel );
@@ -109,9 +117,19 @@ module.export = {
     findFbIdChannel: function( fbId, onSuccess, onError ){
         function find( db ){
             var result = db.collection( "channel" )
-                .find( { member: fbId } );
+                .find( { members: fbId } );
             return onSuccess( result );
         }
         init( find, onError );
+    },
+
+    addChannelMember: function( channelId, fbId, onSuccess, onError ){
+        function update( db ){
+            var result = db.collection( "channel" )
+                .update( { channel: channelId }, { $push: { members: fbId } } );
+            return onSuccess( result );
+        };
+        init( update, onError );
     }
+    
 };
