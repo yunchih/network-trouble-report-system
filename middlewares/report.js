@@ -64,6 +64,7 @@ router.post( '/current', function( req, res, next ){
             var report = req.query;
             report.fbId = req.fbId;
             report.timestamp = Date.now();
+            report.status = "unsolved";
             return reportDB.updateReport( result._id, req.query , onUpdateSuccess, onError );                
         }
     };
