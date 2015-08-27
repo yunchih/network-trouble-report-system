@@ -1,6 +1,45 @@
 
 # Network Trouble Report System
 
+## Status
+
+The only working part for now is this README document, so you difinitly don't need to pull this down.
+
+## Functionality of the front-end
+
+Here is some ideas about the front end. I hope they can be taken into consideration.
+
+### Miscellaneous
+
+* This system is NOT belong to any organization for now!! Keep this in mind, so any organization logo is improper.
+* I have not figure out what to return if post succeed or some error occur. Therefore, the front-end developer may have to keep some flexbility.
+* Ignore chat room for now.
+
+### User-related part
+
+* Account setting page
+  * Requirements:
+     * User must agree one term of service before they submit their data, so one page for "term of service" is need.
+     * Fields to set user data.
+
+### Trouble Report Part
+
+* Scenario: Student's computer is in dorm, but he can only access internet in lounge.
+* Requirement:
+  * The front-end have to tell user some solutions.
+  * The front-end may need some off-line storage functionality.
+* Solution:
+  * Use roommate's computer.
+  * He can somehow open the troubleshooter page and complete it. Afterwards, he goes to somewhere using WIFI to submit it.
+
+* Scenario: When Network management assistant go to other student's rooms, he can not access to network. However, he may want to check the list of reports to be solved as well as some student's information. Moreover, after he fix one problem or fail to find the student, he would want to do some mark on the report.
+* Solution:
+  * The front-end will save some operation and some data needed (not all data) locally, and when it can access Internet, it will synchronize them.
+
+* A list of report unsolved for network management assistant.
+* A list of report solved of a period of time for network management assistant to write journal.
+* Even some journal generator that convert what nma do into journal.
+
 ## APIs
 
 ### Introduction
