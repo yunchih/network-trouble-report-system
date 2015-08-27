@@ -106,32 +106,32 @@ This category of API is about problem reports.
   * status: status of the report, like "solved", "unsolved".
  * Query: none
  * Retrun: (array of)
-  * _id 
-  * issue
-  * description
-  * status
-  * solution
+   * _id 
+   * issue
+   * description
+   * status
+   * solution
  * Description: Get the information of the report that is submit by current user, and satisfy the status.
  * Permission require: general, nma. 
 * `GET /report/current`
  * Parameter: none.
  * Query: none
  * Retrun: (array of)
-  * _id
-  * issue
-  * description
-  * status
-  * solution
+   * _id
+   * issue
+   * description
+   * status
+   * solution
  * Description: Get the information of the report that is submit by current user.
  * Permission require: general, nma. 
 * `POST /report/current`
  * Parameter: none
  * Query:
-  * _id
-  * issue
-  * description
-  * status
-  * solution
+   * _id
+   * issue
+   * description
+   * status
+   * solution
  * Retrun: (if success)
  * `{ "result": "success" }`
  * Description: Submit one report. If the current user have one report unsolved, this operation will update the existed one.
@@ -142,13 +142,13 @@ This category of API is about problem reports.
   * value: value of that property.
  * Query: none
  * Return: (array of)
-  * _id
-  * issue
-  * description
-  * status
-  * solution
-  * solvedBy
-  * ps
+   * _id
+   * issue
+   * description
+   * status
+   * solution
+   * solvedBy
+   * ps
  * Description: Get all the report whose value of the property `:property` is `:value`.
  * Permission require: nma
 * `GET /report/all/period/:start/:end`
@@ -157,13 +157,13 @@ This category of API is about problem reports.
   * end: end of the period.
  * Query: none
  * Return: (array of)
-  * _id
-  * issue
-  * description
-  * status
-  * solution
-  * solvedBy
-  * ps
+   * _id
+   * issue
+   * description
+   * status
+   * solution
+   * solvedBy
+   * ps
  * Description: Get all the report of submit in the period.
  * Permission require: nma
 * `POST /report/:reportId`
