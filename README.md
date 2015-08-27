@@ -44,34 +44,34 @@ This category of APIs provide user-related operation.
 * `POST /user/current`
  * Parameter: none.
  * Query:
-   * name
-   * roomNumber
-   * ip
-   * mac
+    * name
+    * roomNumber
+    * ip
+    * mac
  * Retrun: If successful
    *`{ "result": "success" }`
  * Description: Update the information of current login user.
  * Permission require: general, nma.
 * `GET /user/:prop/:value`
  * Parameter:
-  * prop: one proper of user.
-  * value: the value of that property.
+    * prop: one proper of user.
+    * value: the value of that property.
  * Query: none.
  * Retrun: (array of)
-  * _id
-  * name
-  * roomNumber
-  * ip
-  * mac
-  * fbId
-  * permission
-  * studentId
+    * _id
+    * name
+    * roomNumber
+    * ip
+    * mac
+    * fbId
+    * permission
+    * studentId
  * Description: Get the information of user(s) whose value of property `:prop` is `:value`.
  * Permission require: nma.
 * `POST /user/:prop/:value`
  * Parameter:
-  * prop: one proper of user.
-  * value: the value of that property.
+    * prop: one proper of user.
+    * value: the value of that property.
  * Query:
     * name
     * roomNumber
@@ -103,74 +103,74 @@ This category of API is about problem reports.
 
 * `GET /report/current/:status`
  * Parameter:
-  * status: status of the report, like "solved", "unsolved".
+    * status: status of the report, like "solved", "unsolved".
  * Query: none
  * Retrun: (array of)
-   * _id 
-   * issue
-   * description
-   * status
-   * solution
+    * _id 
+    * issue
+    * description
+    * status
+    * solution
  * Description: Get the information of the report that is submit by current user, and satisfy the status.
  * Permission require: general, nma. 
 * `GET /report/current`
  * Parameter: none.
  * Query: none
  * Retrun: (array of)
-   * _id
-   * issue
-   * description
-   * status
-   * solution
+    * _id
+    * issue
+    * description
+    * status
+    * solution
  * Description: Get the information of the report that is submit by current user.
  * Permission require: general, nma. 
 * `POST /report/current`
  * Parameter: none
  * Query:
-   * _id
-   * issue
-   * description
-   * status
-   * solution
+    * _id
+    * issue
+    * description
+    * status
+    * solution
  * Retrun: (if success)
  * `{ "result": "success" }`
  * Description: Submit one report. If the current user have one report unsolved, this operation will update the existed one.
  * Permission require: general, nma. 
 * `GET /report/all/:prop/:value`
  * Parameter:
-  * prop: one property name of the report
-  * value: value of that property.
+    * prop: one property name of the report
+    * value: value of that property.
  * Query: none
  * Return: (array of)
-   * _id
-   * issue
-   * description
-   * status
-   * solution
-   * solvedBy
-   * ps
+    * _id
+    * issue
+    * description
+    * status
+    * solution
+    * solvedBy
+    * ps
  * Description: Get all the report whose value of the property `:property` is `:value`.
  * Permission require: nma
 * `GET /report/all/period/:start/:end`
  * Parameter:
-  * start: start of the period.
-  * end: end of the period.
+    * start: start of the period.
+    * end: end of the period.
  * Query: none
  * Return: (array of)
-   * _id
-   * issue
-   * description
-   * status
-   * solution
-   * solvedBy
-   * ps
+    * _id
+    * issue
+    * description
+    * status
+    * solution
+    * solvedBy
+    * ps
  * Description: Get all the report of submit in the period.
  * Permission require: nma
 * `POST /report/:reportId`
  * Parameter:
-  * reportId: the _id of the report.
+    * reportId: the _id of the report.
  * query: none
  * Return: (if successful)
-  * `{"result": success}`
+    * `{"result": success}`
  * Description: update the fields of the report with the report id.
  * Permission: nma.
