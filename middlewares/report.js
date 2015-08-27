@@ -2,47 +2,28 @@ var reportDB = require('./modules/report-db.js');
 var express = require('express');
 var router = express.Router();
 var config = require( '../config/report.js' ).config;
+var permission = require( '../modules/permission.js' );
 
-router.use( function( req, res, next ){
-    var query = {};
-    var path = req.router.path;
-    var method = req.router.method;
-    var allowField = config.queryAllowField[path][method];
-    for( var key of allowField ){
-        query[key] = req.query[key];
-    }
-    req.query = query;
-});
-
-router.use( function( req, res, next ){
-    var path = req.router.path;
-    var method = req.router.method;
-    
-    var permissionConfig = config.permissionConfig;
-    var reqPermission = req.session.permission;
-    if( permissionConfig[reqPermission].method.indexOf( path ) === -1 ){
-        res.json( { result: "permission deny" } );
-    }else{
-        next();
-    }
-});
-        
+router.use( permission.request( config ) );
+            
 router.get( '/current/:status', function( req, res, next){
     function onSuccess( result ){
-        return res.send( result );
+        res.result = result;
+        return next();
     };
     function onError( err ){
         return next( err );
     }
     var status = req.params.status;
         
-    reportDB.getReportOfStatusOfFbId( req.session.fbId, onSuccess, onError );    
+    reportDB.getReportOfStatusOfFbId( req.session.fbId,  onSuccess, onError );    
 });
 
 
 router.get( '/current', function( req, res, next ){
     function onSuccess( result ){
-        return res.send( result );
+        res.result = result;
+        return next();
     };
     function onError( err ){
         return next( err );
@@ -77,7 +58,8 @@ router.post( '/current', function( req, res, next ){
 
 router.get( '/all/status/:status', function( req, res, next){
     function onSuccess( result ){
-        return res.send( result );
+        res.result = result;
+        return next();
     };
     function onError( err ){
         return next( err );
@@ -87,7 +69,8 @@ router.get( '/all/status/:status', function( req, res, next){
 
 router.get( '/all/period/:start/:end', function( req, res, next){
     function onSuccess( result ){
-        return res.send( result );
+        res.result = result;
+        return next();
     };
     function onError( err ){
         return next( err );
@@ -98,7 +81,8 @@ router.get( '/all/period/:start/:end', function( req, res, next){
 
 router.get( '/all/fb-id/:fbId', function( req, res, next){
     function onSuccess( result ){
-        return res.send( result );
+        res.result = result;
+        return next();
     };
     function onError( err ){
         return next( err );
@@ -117,4 +101,5 @@ router.post( '/id/:reportId', function( req, res, next ){
     reportDB.updateReport( req.params.reportId, req.query , onSuccess, onError );    
 });   
 
+router.use( permission.response( config ) );
 

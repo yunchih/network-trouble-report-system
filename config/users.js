@@ -1,88 +1,71 @@
-
-
-
-var permissionList = {
-    general:{
-
-        "current-get": {
-            "fbId",
-            "name",
-            "studentId",
-            "roomNumber",
-            "ip",
-            "mac",
-            "permission"
+var userProperty = [
+    'name',
+    'room-number',
+    'ip',
+    'mac',
+    'fb-id',
+    'permission',
+    'student-id'
+];
+    
+var config = {
+    queryAllowField: {        
+        '/current': {            
+            post: [
+                'name',
+                "room-number",
+                "ip",
+                "mac"
+            ]
         },
-        "current-post": {
-            "roomNumber",
-            "ip",
-            "mac"
-        }
+        
+        '/:prop/:value': {
+            post: userProperty
+        },
 
+        'query': {
+            post: [
+                'query',
+                'user'
+            ]
+        }        
     },
 
-    nma: {
-
-        "current-get": {
-            "fbId",
-            "name",
-            "studentId",
-            "roomNumber",
-            "ip",
-            "mac",
-            "permission"
+    resAllowField: {
+        general:{
+            userProperty
         },
-        "current-post": {
-            "fbId",
-            "name",
-            "studentId",
-            "roomNumber",
-            "ip",
-            "mac",
-            "permission"
+        nma: {
+            userProperty
+        }           
+    },
+            
+    permissionConfig: {
+        general: {
+            get: [
+                '/current'
+            ],
+            
+            post: [
+                '/current'
+            ]
         },
-        "prop-value-get": {
-            "fbId",
-            "name",
-            "studentId",
-            "roomNumber",
-            "ip",
-            "mac",
-            "permission"
-        },
-
-        "prop-value-post": {
-            "fbId",
-            "name",
-            "studentId",
-            "roomNumber",
-            "ip",
-            "mac",
-            "permission"
-        },
-
-        "get": {
-            "fbId",
-            "name",
-            "studentId",
-            "roomNumber",
-            "ip",
-            "mac",
-            "permission"
-        },
-
-        "post": {
-            "fbId",
-            "name",
-            "studentId",
-            "roomNumber",
-            "ip",
-            "mac",
-            "permission"
-        }                
+        
+        nma: {
+            get: [
+                '/current',
+                '/:prop/:value',
+                '/query'
+            ],
+            post: [
+                '/current',
+                '/:prop/:value',
+                '/query'
+            ]
+        }
     }
-
 };
+
 
 var user = { permissionList: permissionList };
 
