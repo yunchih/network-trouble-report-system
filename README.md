@@ -47,9 +47,7 @@ This category of APIs provide user-related operation.
    * ip
    * mac
  * Retrun: If successful
-````
-    { "result": "success" }
-````
+   *`{ "result": "success" }`
  * Description: Update the information of current login user.
  * Permission require: general, nma.
 * `GET /user/:prop/:value`
