@@ -1,0 +1,25 @@
+{
+  "name": "My API test utility",
+  "version": "0.0.0",
+  "homepage": "https://github.com/CTinRay/network-trouble-report-system",
+  "authors": [
+    "CTinray"
+  ],
+  "description": "nothing",
+  "main": "test-panel.html",
+  "keywords": [
+    "nothing"
+  ],
+  "license": "GNU",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-sanitize": "~1.4.5",
+    "angular": "~1.4.5"
+  }
+}
