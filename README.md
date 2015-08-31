@@ -3,7 +3,8 @@
 
 ## Status
 
-The only working part for now is this README document, so you difinitly don't need to pull this down.
+user part works basically.
+But still don't pull down the repo so that I will be less embarrassed. 
 
 ## Functionality of the front-end
 
@@ -39,6 +40,25 @@ Here is some ideas about the front end. I hope they can be taken into considerat
 * A list of report unsolved for network management assistant.
 * A list of report solved of a period of time for network management assistant to write journal.
 * Even some journal generator that convert what nma do into journal.
+
+### Explicit description
+
+Interfaces for user: 
+1. to report trouble ( maybe with troubleshooter ).
+2. to view troubles he has report. ( not that important )
+3. to view/modify his/her personal information ( user have to agree with term of service before submitting/updating data ).
+4. other utilization of the API provided if have
+5. A special page for those who login first time which contains term of service
+
+Interfaces for nma:
+1. to view all report of certain status.
+2. to change report status. ( auto sync if modified offline ).
+3. to view report submit in certain period of time.
+4. other utilization of the API provided if have
+
+Something you want.
+
+Any request on APIs provided is welcomed.
 
 ## APIs
 
