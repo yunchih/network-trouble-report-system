@@ -4,7 +4,6 @@ var dbConfig = require('../config/db.js');
 
 var init = function ( onError, onConnect ){
     // Initialization
-    dbConfig.urlurl = 'mongodb://localhost:27017';
     MongoClient.connect( dbConfig.url, function(err, db) {
         if( err !== null ){            
             return onError( err );
@@ -12,10 +11,11 @@ var init = function ( onError, onConnect ){
         return onConnect( db );
     });
 };
-
-function handle( onSuccess, onError ){
+    
+function handle( db, onSuccess, onError ){
     return function(err, result){
-        if( ! err ){
+        db.close();
+        if( err !== null ){
             onError( err );
         }else{
             onSuccess( result );
@@ -28,8 +28,7 @@ module.exports = {
     addUser: function( user, onSuccess, onError ){
         var onConnect = function( db ){
             db.collection('users')
-                .insertOne( user, handle( onSuccess, onError) );
-            db.close();
+                .insertOne( user, handle( db, onSuccess, onError) );
         };
         init( onError, onConnect );
     },
@@ -37,8 +36,7 @@ module.exports = {
     deleteUserByFBId: function( fbId, onSuccess, onError ){
         var onConnect = function( db ){
             db.collection('users')
-                .remove( { "fb-id": fbId }, handle( onSuccess, onError ) );
-            db.close();
+                .remove( { "fbId": fbId }, handle( db, onSuccess, onError ) );
         };
         init( onError, onConnect );
      },
@@ -46,9 +44,8 @@ module.exports = {
     findUserByFBId: function( fbId, onSuccess, onError ){
         var onConnect = function( db ){
             db.collection('users')
-                .find( { "fb-id": fbId } )
-                .toArray( handle( onSuccess, onError ) );
-            db.close();
+                .find( { "fbId": fbId } )
+                .toArray( handle( db, onSuccess, onError ) );
         };
         init( onError, onConnect );
     },
@@ -56,8 +53,7 @@ module.exports = {
     updateUserByFBId: function( fbId, user, onSuccess, onError ){
         var onConnect = function( db ){
             db.collection('users')
-                .update( { "fb-id": fbId }, { $set: user }, handle( onSuccess, onError ) );
-            db.close();
+                .update( { "fbId": fbId }, { $set: user }, handle( db, onSuccess, onError ) );
         };
         init( onError, onConnect );
     },
@@ -68,7 +64,7 @@ module.exports = {
         var onConnect = function( db ){
             db.collection('users')
                 .find( query )
-                .toArray( handle( onSuccess, onError ) );
+                .toArray( handle( db, onSuccess, onError ) );
         };
         init( onError, onConnect );
     },
@@ -78,8 +74,7 @@ module.exports = {
         query[property] = value;
         var onConnect = function( db ){
             db.collection('users')
-                .update( query, { $set: user }, handle( onSuccess, onError ) );
-            db.close( db );
+                .update( query, { $set: user }, handle( db, onSuccess, onError ) );
         };
         init( onError, onConnect );
     },
@@ -87,8 +82,7 @@ module.exports = {
     findUserByQuery: function( query, onSuccess, onError){
         var onConnect = function( db ){
             db.collection('users')
-                .find( query ).toArray( handle( onSuccess, onError ) );
-            db.close( db );
+                .find( query ).toArray( handle( db, onSuccess, onError ) );
         };
         init( onError, onConnect );
     },
@@ -96,8 +90,7 @@ module.exports = {
     updateUserByQuery: function( query, user, onSuccess, onError ){
         var onConnect = function( db ){
             db.collection('users')
-                .update( query, { $set: user }, handle( onSuccess, onError ) );
-            db.close( db );
+                .update( query, { $set: user }, handle( db, onSuccess, onError ) );
         };
         init( onError, onConnect );
     }
