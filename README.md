@@ -44,20 +44,20 @@ Here is some ideas about the front end. I hope they can be taken into considerat
 ### Explicit description
 
 Interfaces for user: 
-1. to report trouble ( maybe with troubleshooter ).
-2. to view troubles he has report. ( not that important )
-3. to view/modify his/her personal information ( user have to agree with term of service before submitting/updating data ).
-4. other utilization of the API provided if have
-5. A special page for those who login first time which contains term of service
+  1. to report trouble ( maybe with troubleshooter ).
+  2. to view troubles he has report. ( not that important )
+  3. to view/modify his/her personal information ( user have to agree with term of service before submitting/updating data ).
+  4. other utilization of the API provided if want
+  5. A special page for those who login first time which contains term of service
 
 Interfaces for nma:
-1. to view all report of certain status.
-2. to change report status. ( auto sync if modified offline ).
-3. to view report submit in certain period of time.
-4. other utilization of the API provided if have
-( Those interfaces should allow nma to view report user data easily, even a button like "send message" )
+  1. to view all report of certain status.
+  2. to change report status. ( auto sync if modified offline ).
+  3. to view report submit in certain period of time.
+  4. other utilization of the API provided if want
+  ( Those interfaces should allow nma to view report user data easily, even a button like "send message" )
 
-Something you want.
+  Something you want.
 
 Any request on APIs provided is welcomed.
 
