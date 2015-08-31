@@ -43,7 +43,7 @@ router.get( '/:prop/:value', function( req, res, next){
     
     function onSuccess( user ){
         res.result = user;
-        return next();
+        return response( req, res );
     };
     function onError( err ){
         return next( err );
@@ -72,7 +72,7 @@ router.get( '/query', function( req, res, next ){
     
     function onSuccess( result ){
         res.result = result;
-        return next();
+        return response( req, res );
     };
     function onError( err ){
         return next( err );

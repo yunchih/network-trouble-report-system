@@ -1,12 +1,12 @@
 var userProperty = [
     '_id',
     'name',
-    'room-number',
+    'roomNumber',
     'ip',
     'mac',
     'fbId',
     'permission',
-    'student-id'
+    'studentId'
 ];
     
 var config = {
@@ -24,7 +24,10 @@ var config = {
             post: userProperty
         },
 
-        'query': {
+        '/query': {
+            get: [
+                "query"
+            ],
             post: [
                 'query',
                 'user'
