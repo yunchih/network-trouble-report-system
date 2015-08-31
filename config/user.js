@@ -1,9 +1,10 @@
 var userProperty = [
+    '_id',
     'name',
     'room-number',
     'ip',
     'mac',
-    'fb-id',
+    'fbId',
     'permission',
     'student-id'
 ];
@@ -32,12 +33,8 @@ var config = {
     },
 
     resAllowField: {
-        general:{
-            userProperty
-        },
-        nma: {
-            userProperty
-        }           
+        general: userProperty,
+        nma: userProperty
     },
             
     permissionConfig: {
@@ -67,7 +64,6 @@ var config = {
 };
 
 
-var user = { permissionList: permissionList };
 
-module.exports = user;
+module.exports = config;
 
