@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>
+            Test
+        </title>
+        <script src="./bower_components/angular/angular.js"></script>
+        <script src="./bower_components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="./js/controller.js"></script>
+    </head>
+    <body ng-app="testUtil" ng-controller="panelController">
+        <div>
+            <a href="/fb-auth/login">Login</a>
+        </div>
+        <div>
+            <select ng-model="currentApiIndex">
+                <option ng-repeat="(index, api) in apis" value="{{ index }}">
+                    {{ api.method + " " + api.url }}
+                </option>
+            </select>
+            <div>
+                <div ng-repeat="field in apis[currentApiIndex].fields ">
+                    <label>
+                        {{ field }}
+                        <input type="textarea" ng-model="query[field]"/>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <button ng-click="clearQuery()">Clear Query</button>
+        <button ng-click="request()">Submit</button>
+        
+        <div ng-bind="message">
+            
+        </div>
+        <div>
+            <div ng-repeat="(key, value) in query">
+                {{ key }} {{ value }}
+            </div>
+        </div>
+        <div>
+            Result
+            <table>
+                <tr ng-repeat="(key, value) in result">
+                    <td ng-bind-html="key"></td>
+                    <td ng-bind-html="value"></td>
+                </tr>
+            </span>
+            </table>
+            Data:
+            <table ng-repeat="doc in result.data"">
+                <tr ng-repeat="(key, value) in doc">
+                    <td ng-bind="key"></td>
+                    <td ng-bind="value"></td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+
