@@ -15,14 +15,43 @@ var apis = [
         method: "post",
         fields: [
             'name',
-            'room-number',
+            'roomNumber',
             'ip',
             'mac',
-            'fb-id',
+            'fbId',
             'permission',
-            'student-id'
+            'studentId'
         ]
-    }
+    },
+
+    {
+        url: "/api/1.0/user/:prop/:value",
+        method: "get"
+    },
+    
+    {
+        url: "/api/1.0/user/:prop/:value",
+        method: "post",
+        fields: [
+            'name',
+            'roomNumber',
+            'ip',
+            'mac',
+            'fbId',
+            'permission',
+            'studentId'
+        ]
+    },
+
+    {
+        url: "/api/1.0/user/query",
+        method: "get",
+        fields: [
+            "query"
+        ]
+    }    
+
+    
 ];
 
 
@@ -33,7 +62,7 @@ app.controller( "panelController", function( $scope, $http ){
         var currentApi = apis[$scope.currentApiIndex];
         if( currentApi.method === "get" ){
             $scope.message = "get";
-            $http.get( currentApi.url )
+            $http.get( currentApi.url, { params: $scope.query } )
                 .then( function( res ){
                     $scope.result = res;
                 },function( res ){

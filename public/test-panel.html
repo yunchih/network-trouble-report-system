@@ -13,12 +13,20 @@
         <div>
             <a href="/fb-auth/login">Login</a>
         </div>
+        
         <div>
             <select ng-model="currentApiIndex">
                 <option ng-repeat="(index, api) in apis" value="{{ index }}">
                     {{ api.method + " " + api.url }}
                 </option>
             </select>
+            <div>
+                Method: <input ng-model="apis[currentApiIndex].method" type="text"/>
+            </div>
+            <div>
+                Url: <input ng-model="apis[currentApiIndex].url" type="text"/>
+            </div>                
+
             <div>
                 <div ng-repeat="field in apis[currentApiIndex].fields ">
                     <label>
