@@ -55,6 +55,7 @@ Interfaces for nma:
 2. to change report status. ( auto sync if modified offline ).
 3. to view report submit in certain period of time.
 4. other utilization of the API provided if have
+( Those interfaces should allow nma to view report user data easily, even a button like "send message" )
 
 Something you want.
 
