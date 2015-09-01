@@ -49,8 +49,49 @@ var apis = [
         fields: [
             "query"
         ]
-    }    
+    },
 
+    {
+        url: "/api/1.0/report/current/:status",
+        method: "get",
+        fields: []
+    },
+
+    {
+        url: "/api/1.0/report/current",
+        method: "get",
+        fields: []
+    },
+    
+    {
+        url: "/api/1.0/report/current",
+        method: "post",
+        fields: ['issue', 'description', 'status', 'solution', 'soved-by', 'ps']
+    },
+
+    {
+        url: "/api/1.0/report/all/status/:status",
+        method: "get",
+        fields: []
+    },
+
+    {
+        url: "/api/1.0/report/all/period/:start/:end",
+        method: "get",
+        fields: []
+    },
+
+    {
+        url: "/api/1.0/report/all/:prop/:value",
+        method: "get",
+        fields: []
+    },
+
+    {
+        url: "/api/1.0/report/id/:reportId",
+        method: "post",
+        fields: ['issue', 'description', 'status', 'solution', 'solvedBy', 'ps']
+    }
     
 ];
 
