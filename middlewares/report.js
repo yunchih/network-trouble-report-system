@@ -1,29 +1,37 @@
-var reportDB = require('./modules/report-db.js');
+var reportDB = require('../modules/report-db.js');
 var express = require('express');
 var router = express.Router();
-var config = require( '../config/report.js' ).config;
-var permission = require( '../modules/permission.js' );
+var config = require( '../config/report.js' );
+var checkRequest = require( '../modules/permission.js' ).request( config );
+var response = require( '../modules/permission.js' ).response( config );
 
-router.use( permission.request( config ) );
-            
+
 router.get( '/current/:status', function( req, res, next){
+    if( !checkRequest( req, res ) ){
+        return;
+    }
+    
     function onSuccess( result ){
         res.result = result;
-        return next();
+        return response( req, res );
     };
     function onError( err ){
         return next( err );
-    }
+    };
     var status = req.params.status;
-        
-    reportDB.getReportOfStatusOfFbId( req.session.fbId,  onSuccess, onError );    
+    
+    reportDB.getReportOfStatusOfFbId( req.session.fbId, status,  onSuccess, onError );    
 });
 
 
 router.get( '/current', function( req, res, next ){
+    if( !checkRequest( req, res ) ){
+        return;
+    }
+
     function onSuccess( result ){
         res.result = result;
-        return next();
+        return response( req, res );
     };
     function onError( err ){
         return next( err );
@@ -32,21 +40,25 @@ router.get( '/current', function( req, res, next ){
 });
 
 router.post( '/current', function( req, res, next ){
+    if( !checkRequest( req, res ) ){
+        return;
+    }
+
     function onGetSuccess( result ){
-        if( !result ){
+        var report = req.query;
+        report.fbId = req.session.fbId;
+        report.timestamp = Date.now();
+        report.status = "unsolved";
+        if( result.length === 0 ){
             function onAddSuccess( result ){
                 return res.json( { result: "success" } );
             };
-            return reportDB.addReport( req.query, onAddSuccess, onError );
+            return reportDB.addReport( report, onAddSuccess, onError );
         }else{
             function onUpdateSuccess( result ){
                 return res.json( { result: "success" } );
             };
-            var report = req.query;
-            report.fbId = req.fbId;
-            report.timestamp = Date.now();
-            report.status = "unsolved";
-            return reportDB.updateReport( result._id, req.query , onUpdateSuccess, onError );                
+            return reportDB.updateReport( result[0]._id.id, report , onUpdateSuccess, onError );                
         }
     };
     function onError( err ){
@@ -57,9 +69,13 @@ router.post( '/current', function( req, res, next ){
 
 
 router.get( '/all/status/:status', function( req, res, next){
+    if( !checkRequest( req, res ) ){
+        return;
+    }
+
     function onSuccess( result ){
         res.result = result;
-        return next();
+        return response( req, res );
     };
     function onError( err ){
         return next( err );
@@ -68,21 +84,31 @@ router.get( '/all/status/:status', function( req, res, next){
 });
 
 router.get( '/all/period/:start/:end', function( req, res, next){
+    if( !checkRequest( req, res ) ){
+        return;
+    }
+
     function onSuccess( result ){
         res.result = result;
-        return next();
+        return response( req, res );
     };
     function onError( err ){
         return next( err );
     }
-    reportDB.getReportOfPerid( req.params.start, req.params.end, onSuccess, onError );    
+    var timeStart = Number( req.params.start );
+    var timeEnd = Number( req.params.end );
+    reportDB.getReportOfPeriod( timeStart, timeEnd, onSuccess, onError );    
 });
 
+// To be implemented
+router.get( '/all/:prop/:value', function( req, res, next){
+    if( !checkRequest( req, res ) ){
+        return;
+    }
 
-router.get( '/all/fb-id/:fbId', function( req, res, next){
     function onSuccess( result ){
         res.result = result;
-        return next();
+        return response( req, res );
     };
     function onError( err ){
         return next( err );
@@ -92,6 +118,10 @@ router.get( '/all/fb-id/:fbId', function( req, res, next){
 
 
 router.post( '/id/:reportId', function( req, res, next ){
+    if( !checkRequest( req, res ) ){
+        return;
+    }
+
     function onSuccess( result ){
         return res.json( { result: "success" } );
     };
@@ -101,5 +131,5 @@ router.post( '/id/:reportId', function( req, res, next ){
     reportDB.updateReport( req.params.reportId, req.query , onSuccess, onError );    
 });   
 
-router.use( permission.response( config ) );
 
+module.exports = router;

@@ -1,5 +1,5 @@
-var generalProp = ['issue', 'description', 'status', 'solution'];
-var nmaProp = ['issue', 'description', 'status', 'solution', 'soved-by', 'ps'];
+var generalProp = ['issue', 'description', 'status', 'solution', 'timestamp'];
+var nmaProp = ['_id', 'fbId', 'issue', 'description', 'status', 'solution', 'solvedBy', 'ps', 'userUpdateTime', 'timestamp' ];
 
 var config = {
     queryAllowField: {        
@@ -8,18 +8,13 @@ var config = {
         },
         
         '/id/:reportId': {
-            post: [ 'issue', 'description', 'status', 'solution', 'solved-by' ]
+            post: [ 'issue', 'description', 'status', 'solution', 'solvedBy' ]
         }
     },
 
     resAllowField: {
-        general:{
-            generalProp
-        },
-        
-        nma: {
-            nmaProp
-        }           
+        general: generalProp,        
+        nma: nmaProp
     },
 
     permissionConfig: {
@@ -33,6 +28,7 @@ var config = {
                    '/current/:status',
                    '/all/status/:status',
                    '/all/period/:start/:end',
+                   '/all/:prop/:value',
                    '/all/fb-id/:fbId'
                  ],
             post: [ '/current',
