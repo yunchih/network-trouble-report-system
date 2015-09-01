@@ -8,7 +8,9 @@ var response = require( '../modules/permission.js' ).response( config );
 
 
 router.get( '/current', function( req, res, next){
-    checkRequest( req, res );    
+    if( !checkRequest( req, res ) ){
+	return;
+}    
     function onSuccess( user ){
         res.result = user;
         return response( req, res );
@@ -24,7 +26,9 @@ router.get( '/current', function( req, res, next){
 
 
 router.post( '/current', function( req, res, next ){
-    checkRequest( req );    
+    if( !checkRequest( req, res ) ){
+        return;
+    }
 
     function onSuccess( user ){
         return res.json({ result: "success" });
@@ -39,7 +43,9 @@ router.post( '/current', function( req, res, next ){
 
 
 router.get( '/:prop/:value', function( req, res, next){
-    checkRequest( req, res );
+    if( !checkRequest( req, res ) ){
+	return;
+    }
     
     function onSuccess( user ){
         res.result = user;
@@ -54,7 +60,9 @@ router.get( '/:prop/:value', function( req, res, next){
 });
 
 router.post( '/:prop/:value', function( req, res, next ){
-    checkRequest( req, res );
+    if( !checkRequest( req, res ) ){
+	return;
+    }
     
     function onSuccess( result ){        
         return res.json( { result: "success" } );
@@ -68,7 +76,9 @@ router.post( '/:prop/:value', function( req, res, next ){
 });
 
 router.get( '/query', function( req, res, next ){
-    checkRequest( req, res );
+    if( !checkRequest( req, res ) ){
+	return;
+    }
     
     function onSuccess( result ){
         res.result = result;
@@ -85,7 +95,9 @@ router.get( '/query', function( req, res, next ){
 
             
 router.post( '/query', function( req, res, next ){
-    checkRequest( req, res );
+    if( !checkRequest( req, res ) ){
+	return;
+    }
     
     function onSuccess( result ){        
         res.result = result;
