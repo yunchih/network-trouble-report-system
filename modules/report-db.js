@@ -1,69 +1,88 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var dbConfig = require('../config/db.js');
+var ObjectId = require('mongodb').ObjectId;
 
-var init = function ( onConnected, onError ){
-        // Initialization
-    dbConfig.urlurl = 'mongodb://localhost:27017';
+
+var init = function ( onError, onConnect ){
+    // Initialization
     MongoClient.connect( dbConfig.url, function(err, db) {
-        if( err !== null ){
+        if( err !== null ){            
             return onError( err );
         }
-        console.log("Connected correctly to server.");            
-        return onConnected( db );
+        return onConnect( db );
     });
 };
+    
 
-module.export = {
+function handle( db, onSuccess, onError ){
+    return function(err, result){
+        db.close();
+        if( err !== null ){
+            onError( err );
+        }else{
+            onSuccess( result );
+        }
+    };
+};    
+
+module.exports = {
     addReport: function( report, onSuccess, onError ){
-        function add( db ){
-            var result = db.collection('report').insert( report );
-            return onSuccess( result );
+        function onConnect( db ){
+            db.collection('report')
+                .insertOne( report, handle( db, onSuccess, onError ) );
         };
-        init( add, onError );
+        init( onError, onConnect );
     },
 
     getReportOfStatusOfFbId: function( fbId, status, onSuccess, onError ){
-        function find( db ){
-            var result = db.collection("report").find( { fbId: fbId, status: status } );
-            return onSuccess( result );
+        function onConnect( db ){
+            db.collection("report")
+                .find( { fbId: fbId, status: status } )
+                .toArray( handle( db, onSuccess, onError ) );
         };
-        init( find, onError );
+        init( onError, onConnect );
     },
 
     getReportOfFbId: function( fbId, onSuccess, onError ){
-        function find( db ){
-            var result = db.collection("report").find( { fbId: fbId } );
-            return onSuccess( result );
+        function onConnect( db ){
+            db.collection("report")
+                .find( { fbId: fbId } )
+                .toArray( handle( db, onSuccess, onError ) );
         };
-        init( find, onError );
+        init( onError, onConnect );
     },
     
     updateReport: function( reportId, report, onSuccess, onError ){
-        function set( db ){
-            var result = db.collection("messages").update( { _id: reportId }, { $set: report } );
-            return onSuccess( result );
+        function onConnect( db ){
+            db.collection("report")
+                .update( { _id: new ObjectId( reportId ) }, { $set: report },
+                         handle( db, onSuccess, onError ) );
         };
-        init( set, onError );
+        if( !ObjectId.isValid( reportId ) ){
+            return onError( Error( "Invlid report id " ) );
+        }
+        return init( onError, onConnect );
     },
 
     getReportOfStatus: function( status, onSuccess, onError ){
-        function find( db ){
-            var result = db.collection("message").find( { status: status } );
-            return onSuccess( result );
+        function onConnect( db ){
+            db.collection("report")
+                .find( { status: status } )
+                .toArray( handle( db, onSuccess, onError ) );
         };
-        init( find, onError );
+        init( onError, onConnect );
     },
 
     getReportOfPeriod: function( timeStart, timeEnd, onSuccess, onError ){
-        function find( db ){
-            var result = db.collection("message")
+        function onConnect( db ){
+            var result = db.collection("report")
                 .find( { timestamp:
                          { $gte: timeStart,
                            $lt: timeEnd }
-                       } );
-            return onSuccess( result );
+                       } )
+                .toArray( handle( db, onSuccess, onError ) );
         };
-        init( find, onError );
+        init( onError, onConnect );
     }
 };
