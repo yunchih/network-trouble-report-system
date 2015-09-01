@@ -13,7 +13,7 @@ module.exports = {
 
             // Filter query fields
             var query = {};
-            var allowField = config.queryAllowField[path][method];
+            var allowField = ( config.queryAllowField[path] || {} )[method];
             if( allowField ){
                 for( var key of allowField ){
                     if( req.query[key] ){
@@ -27,7 +27,9 @@ module.exports = {
             var permissionConfig = config.permissionConfig;
             if( permissionConfig[reqPermission][method].indexOf( path ) === -1 ){
                 res.json( { result: "permission deny" } );
+                return false;
             }
+            return true;
         };      
     },
 
