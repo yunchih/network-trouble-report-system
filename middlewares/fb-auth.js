@@ -6,6 +6,7 @@ var express = require('express')
 , session = require('express-session')
 //, bodyParser = require("body-parser")
 , fbConfig = require( "../config/fb-app.js" );
+var userDB = require( "../modules/user-db.js" );
 
 var init = function( onLogin ){
 
@@ -17,7 +18,7 @@ var init = function( onLogin ){
     //   have a database of user records, the complete Facebook profile is serialized
     //   and deserialized.
     passport.serializeUser(function(user, done) {
-        done(null, user);
+        done( null, user );        
     });
 
     passport.deserializeUser(function(obj, done) {
@@ -69,7 +70,7 @@ var init = function( onLogin ){
     router.get('/login/callback', 
             passport.authenticate('facebook', { failureRedirect: '/login' }),
             function(req, res) {
-                res.redirect('/');
+                res.redirect('/test-panel.html');
             });
 
     router.get('/logout', function(req, res){

@@ -5,19 +5,22 @@ var logger = require('morgan');
 var session = require('express-session');
 var bodyParser = require("body-parser");
 var fbAuth = require('./middlewares/fb-auth.js');
-//var user = require('./middlewares/user.js');
 var test = require( './middlewares/test.js' );
 var auth = require( './middlewares/auth.js' );
+var user = require('./middlewares/user.js');
+var report = require( './middlewares/report.js' );
 
 var app = express();
 
+
+app.use( express.static('public') );
+
 // configure Express
-app.use(logger());
+// app.use(logger());
 app.use(bodyParser());
 app.use(session({ secret: 'keyboard cat' }));
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 
 var onFBLogin = function( accessToken, refreshToken, profile, done) {
@@ -27,7 +30,8 @@ var onFBLogin = function( accessToken, refreshToken, profile, done) {
 app.use( '/fb-auth', fbAuth( onFBLogin ) );
 app.use( auth );
 
-//app.use( '/api/1.0/user/', user );
+app.use( '/api/1.0/user/', user );
+app.use( '/api/1.0/report/', report );
 
 app.use( '/test', test );
 

@@ -5,11 +5,9 @@ var config = require( '../config/report.js' );
 var checkRequest = require( '../modules/permission.js' ).request( config );
 var response = require( '../modules/permission.js' ).response( config );
 
-
+            
 router.get( '/current/:status', function( req, res, next){
-    if( !checkRequest( req, res ) ){
-        return;
-    }
+    if( !chechRequest( req, res ) ) return;
     
     function onSuccess( result ){
         res.result = result;
@@ -19,15 +17,13 @@ router.get( '/current/:status', function( req, res, next){
         return next( err );
     };
     var status = req.params.status;
-    
+        
     reportDB.getReportOfStatusOfFbId( req.session.fbId, status,  onSuccess, onError );    
 });
 
 
 router.get( '/current', function( req, res, next ){
-    if( !checkRequest( req, res ) ){
-        return;
-    }
+    if( !chechRequest( req, res ) ) return;
 
     function onSuccess( result ){
         res.result = result;
@@ -40,9 +36,7 @@ router.get( '/current', function( req, res, next ){
 });
 
 router.post( '/current', function( req, res, next ){
-    if( !checkRequest( req, res ) ){
-        return;
-    }
+    if( !chechRequest( req, res ) ) return;
 
     function onGetSuccess( result ){
         var report = req.query;
@@ -58,7 +52,7 @@ router.post( '/current', function( req, res, next ){
             function onUpdateSuccess( result ){
                 return res.json( { result: "success" } );
             };
-            return reportDB.updateReport( result[0]._id.id, report , onUpdateSuccess, onError );                
+            return reportDB.updateReport( result[0]._id, report , onUpdateSuccess, onError );                
         }
     };
     function onError( err ){
@@ -69,9 +63,7 @@ router.post( '/current', function( req, res, next ){
 
 
 router.get( '/all/status/:status', function( req, res, next){
-    if( !checkRequest( req, res ) ){
-        return;
-    }
+    if( !chechRequest( req, res ) ) return;
 
     function onSuccess( result ){
         res.result = result;
@@ -84,9 +76,7 @@ router.get( '/all/status/:status', function( req, res, next){
 });
 
 router.get( '/all/period/:start/:end', function( req, res, next){
-    if( !checkRequest( req, res ) ){
-        return;
-    }
+    if( !chechRequest( req, res ) ) return;
 
     function onSuccess( result ){
         res.result = result;
@@ -102,9 +92,7 @@ router.get( '/all/period/:start/:end', function( req, res, next){
 
 // To be implemented
 router.get( '/all/:prop/:value', function( req, res, next){
-    if( !checkRequest( req, res ) ){
-        return;
-    }
+    if( !chechRequest( req, res ) ) return;
 
     function onSuccess( result ){
         res.result = result;
@@ -118,9 +106,7 @@ router.get( '/all/:prop/:value', function( req, res, next){
 
 
 router.post( '/id/:reportId', function( req, res, next ){
-    if( !checkRequest( req, res ) ){
-        return;
-    }
+    if( !chechRequest( req, res ) ) return;
 
     function onSuccess( result ){
         return res.json( { result: "success" } );

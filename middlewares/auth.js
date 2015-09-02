@@ -3,6 +3,11 @@ var router = express.Router();
 var userDB = require( '../modules/user-db.js' );
 
 router.use( function( req, res, next ){
+    // For no network access enviroment debugging
+    req.session.permission = "nma";
+    req.session.fbId = "1161460463869930";
+    req.user = {};
+
     if( ! req.user ){
         return res.send( "not login" );
     }
