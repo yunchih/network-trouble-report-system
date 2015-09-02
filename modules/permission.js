@@ -15,7 +15,9 @@ module.exports = {
             var query = {};
             var allowField = ( config.queryAllowField[path] || {} )[method];
             if( allowField ){
-                for( var key of allowField ){
+                var length = allowField.length;
+                for( var i = 0 ; i < length ; ++i  ){
+                    var key = allowField[i];
                     if( req.query[key] ){
                         query[key] = req.query[key];
                     }
@@ -45,7 +47,9 @@ module.exports = {
             if( resAllowField ){
                 for( var i = 0 ; i < result.length ; ++i ){
                     response[i] = {};
-                    for( var prop of resAllowField ){
+                    var length = resAllowField.length;
+                    for( var j = 0 ; j < length ; ++j ){
+                        var prop = resAllowField[j];
                         response[i][prop] = result[i][prop];
                     }
                 }
