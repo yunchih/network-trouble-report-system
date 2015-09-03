@@ -12,7 +12,7 @@ router.use( function( req, res, next ){
         return res.send( "not login" );
     }
     function found( result ){            
-        if( ! result ){
+        if( result.length === 0 ){
             var user = {
                 fbId: req.user.id,
                 permission: "nma"
