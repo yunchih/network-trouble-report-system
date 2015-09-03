@@ -83,8 +83,33 @@ Any request on APIs provided is welcomed.
 * Return of DB: Array.
 * Feedback: If anymore API or any modification of configuration is needed, please open issue to discuss.
 
+### Login URL
+
+* `/fb-auth/login`
+  * Query:
+    * redirect: The URL to be redirected to after login successfully.
+  * Description:
+    * FB login fail: redirect back to /fb-auth/login.
+    * FB login successfully
+      * Have not completed register process: redirect to register page.
+      * Have completed register process: redirect to the URL specified in the request URL. If not specified, it will redirect to `/static/index.html`
+
 ### User API
 
+* `POST /register`
+  * Parameter: none.
+  * Query: 
+    * name
+    * roomNumber
+    * ip
+    * mac
+    * fb-id
+    * studentId
+    * agree
+      * Agree with term of service. This query must be true otherwise the request will be rejected.
+  * Description:
+  * Permission: Only those who have login and have not complete register process.
+  
 This category of APIs provide user-related operation.
 
 * `GET /user/current`
