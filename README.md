@@ -85,6 +85,7 @@ Any request on APIs provided is welcomed.
 
 ### Login URL
 
+(This URL is not to be call as AJAX)
 * `/fb-auth/login`
   * Query:
     * redirect: The URL to be redirected to after login successfully.
@@ -107,7 +108,7 @@ Any request on APIs provided is welcomed.
     * studentId
     * agree
       * Agree with term of service. This query must be true otherwise the request will be rejected.
-  * Description:
+  * Description: Register new user.
   * Permission: Only those who have login and have not complete register process.
   
 This category of APIs provide user-related operation.
