@@ -1,17 +1,22 @@
 var express = require('express');
+var app = express();
+
+var logger = require('morgan');
+
+var dbConfig = require('./config/db.js');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
-var logger = require('morgan');
-var session = require('express-session');
-var bodyParser = require("body-parser");
+
 var fbAuth = require('./middlewares/fb-auth.js');
-var test = require( './middlewares/test.js' );
 var checkUser = require( './middlewares/check-user.js' );
+
+var bodyParser = require("body-parser");
 var user = require('./middlewares/user.js');
 var report = require( './middlewares/report.js' );
 var register = require( './middlewares/register.js' );
-
-var app = express();
 
 
 app.use( '/static', express.static('static') );
@@ -19,8 +24,14 @@ app.use( '/static', express.static('static') );
 
 // configure Express
 // app.use(logger());
-app.use(bodyParser());
-app.use(session({ secret: 'keyboard cat' }));
+// app.use(bodyParser());
+
+app.use(session({
+    secret: 'fdg  hjg oi hghdjfg js hgsha;hga;rua urjoiuh h',
+    store: new MongoStore({ url: dbConfig.url })
+}));
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 
