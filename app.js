@@ -6,14 +6,16 @@ var session = require('express-session');
 var bodyParser = require("body-parser");
 var fbAuth = require('./middlewares/fb-auth.js');
 var test = require( './middlewares/test.js' );
-var auth = require( './middlewares/auth.js' );
+var checkUser = require( './middlewares/check-user.js' );
 var user = require('./middlewares/user.js');
 var report = require( './middlewares/report.js' );
+var register = require( './middlewares/register.js' );
 
 var app = express();
 
 
-app.use( express.static('public') );
+app.use( '/static', express.static('static') );
+
 
 // configure Express
 // app.use(logger());
@@ -28,11 +30,21 @@ var onFBLogin = function( accessToken, refreshToken, profile, done) {
 };
 
 app.use( '/fb-auth', fbAuth( onFBLogin ) );
-app.use( auth );
+
+app.use( function(req, res, next) {
+    if (req.isAuthenticated()) {
+        req.session.permission = "nobody";
+        return next();
+    }
+    else{ return res.json( { error: "fb not login" } ); }
+});
+
+
+app.use( '/register', register );
+
+app.use( checkUser );
 
 app.use( '/api/1.0/user/', user );
 app.use( '/api/1.0/report/', report );
-
-app.use( '/test', test );
 
 app.listen( 3000 );

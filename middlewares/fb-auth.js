@@ -31,8 +31,8 @@ var init = function( onLogin ){
     //   profile), and invoke a callback with a user object.    
     passport.use(new FacebookStrategy({
         clientID: fbConfig.appId,
-        clientSecret: fbConfig.appSecret,
-        callbackURL: "http://localhost:3000/fb-auth/login/callback"
+        clientSecret: fbConfig.appSecret
+        //callbackURL: "http://localhost:3000/fb-auth/login/callback"
     },
                                       function(accessToken, refreshToken, profile, done) {
                                           // asynchronous verification, for effect...
@@ -55,23 +55,31 @@ var init = function( onLogin ){
     //   request.  The first step in Facebook authentication will involve
     //   redirecting the user to facebook.com.  After authorization, Facebook will
     //   redirect the user back to this application at /auth/facebook/callback
-    router.get('/login',
-            passport.authenticate('facebook'),
-            function(req, res){
-                // The request will be redirected to Facebook for authentication, so this
-                // function will not be called.
-            });
+    router.get('/login',function( req, res, next){
+        var redirect = encodeURIComponent( req.query.redirect || "/" );
+        var callback = "/fb-auth/login/callback?redirect=" + redirect;
+        return passport.authenticate('facebook',
+                                     {callbackURL: callback}
+                                    )( req, res, next);
+    });
 
     // GET /auth/facebook/callback
     //   Use passport.authenticate() as route middleware to authenticate the
     //   request.  If authentication fails, the user will be redirected back to the
     //   login page.  Otherwise, the primary route function function will be called,
     //   which, in this example, will redirect the user to the home page.
-    router.get('/login/callback', 
-            passport.authenticate('facebook', { failureRedirect: '/login' }),
-            function(req, res) {
-                res.redirect('/test-panel.html');
-            });
+    router.get('/login/callback', function( req, res, next){        
+        var redirect = encodeURIComponent( req.query.redirect || "/" );
+        var callback = "/fb-auth/login/callback?redirect=" + redirect;
+        var checkUser = "/check-user?redirect=" + redirect;
+        return passport.authenticate('facebook',
+                                     {
+                                         callbackURL: callback,
+                                         successRedirect: checkUser,
+                                         failureRedirect: "/fb-auth/login" }
+                                    )( req, res, next);                   
+        
+    });
 
     router.get('/logout', function(req, res){
         req.logout();
@@ -79,7 +87,24 @@ var init = function( onLogin ){
     });
 
 
+    router.get('/auth/facebook/login/:id', function(req,res,next) {
+        passport.authenticate(
+            'facebook', 
+            {callbackURL: '/fb-auth/auth/facebook/login_callback/'+req.params.id }
+        )(req,res,next);
+    });
 
+    router.get('/auth/facebook/login_callback/:id', function(req,res,next) {
+        passport.authenticate(
+            'facebook',
+            {
+                callbackURL:"/fb-auth/auth/facebook/login_callback/"+req.params.id
+                , successRedirect:"/login_ok.html"
+                , failureRedirect:"/login_failed.html"
+            }
+        ) (req,res,next);
+    });
+    
     // Simple route middleware to ensure user is authenticated.
     //   Use this route middleware on any resource that needs to be protected.  If
     //   the request is authenticated (typically via a persistent login session),
