@@ -88,7 +88,7 @@ Any request on APIs provided is welcomed.
 (This URL is not to be call as AJAX)
 * `/fb-auth/login`
   * Query:
-    * redirect: The URL to be redirected to after login successfully.
+    * redirect: The URL to be redirected to after login successfully. It must be relative URL.
   * Description:
     * FB login fail: redirect back to /fb-auth/login.
     * FB login successfully
