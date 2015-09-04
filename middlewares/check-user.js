@@ -3,39 +3,44 @@ var router = express.Router();
 var userDB = require( '../modules/user-db.js' );
 var url = require('url');
 
-router.use( function( req, res, next ){
-    // For no network access enviroment debugging
-    // req.session.permission = "nma";
-    // req.session.fbId = "1161460463869930";
-    // req.user = {};
-
-    function found( result ){            
-        if( result.length === 0 ){
-            return res.redirect( "/static/register.html" );
+module.exports = function( db ){
+    var userCollection = db.collection("users");
+    
+    router.use( function( req, res, next ){
+        if( ! req.session.permission ){
+            return userCollection
+                .find( { fbId: req.user.id } )
+                .toArray( function( err, result ){
+                    if( err !== null ){
+                        return next(err);
+                    }else{
+                        req.session.fbId = req.user.id;
+                        if( result.length !== 0 ){
+                            req.session.permission = result[0].permission;
+                        }else{                            
+                            req.session.permission = "nobody";
+                        }            
+                        return next();            
+                    }
+                });        
         }else{
-            req.session.fbId = req.user.fbId;
-            req.session.permission = result[0].permission;
-            return next();            
+            return next();
         }
-    };
-    if( req.session.permission === "nobody" ){
-        return userDB.findUserByFBId( req.user.id, found, next );
-    }else{
-        return next();
-    }
-});
+    });
 
-// Redirect if req pass the check-user test above.
-router.get( '/check-user', function( req, res, next ){ 
-    var target = req.query.redirect;
-    if( typeof( target ) === 'string' ){
-        var parsed = url.parse( target );
-        if( parsed.host === null ){
-            return res.redirect( target );
+    // Redirect user according to permission.
+    router.get( '/check-user', function( req, res, next ){ 
+        if( req.session.permission === "nobody" ){
+            res.redirect( "/static/register.html" );
         }
-    }
-    return res.redirect( '/static/index.html' );
-});
-
-
-module.exports = router;
+        var target = req.query.redirect;
+        if( typeof( target ) === 'string' ){
+            var parsed = url.parse( target );
+            if( parsed.host === null ){
+                return res.redirect( target );
+            }
+        }
+        return res.redirect( '/static/index.html' );
+    });
+    return router;
+};

@@ -8,7 +8,11 @@ var userProperty = [
 ];
 
 module.exports = {
-    queryAllowField: userProperty,
+    queryAllowField:{
+        "/":{
+            "post": userProperty
+        }
+    },
     permissionConfig: {
         nobody: {
             post: [
