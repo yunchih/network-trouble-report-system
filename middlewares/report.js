@@ -4,118 +4,116 @@ var router = express.Router();
 var config = require( '../config/report.js' );
 var checkRequest = require( '../modules/permission.js' ).request( config );
 var response = require( '../modules/permission.js' ).response( config );
+var ObjectId = require('mongodb').ObjectId;
 
-            
-router.get( '/current/:status', function( req, res, next){
-    if( !chechRequest( req, res ) ) return;
+module.exports = function( db ){
+
+    var collection = db.collection("reports");
+
+    var handleResponse = function( req, res, next ){
+        return function( err, result ){
+            if( err !== null ){
+                return next( err );
+            }else{
+                res.result = result;
+                return response( req, res );
+            }
+        };
+    };
+
+    var handle = function( req, res, next ){
+        return function( err, result ){
+            if( err !== null ){
+                return next( err );
+            }else{
+                res.result = result;
+                return res.json( { success: true } );
+            }
+        };
+    };
+
     
-    function onSuccess( result ){
-        res.result = result;
-        return response( req, res );
-    };
-    function onError( err ){
-        return next( err );
-    };
-    var status = req.params.status;
+    router.get( '/current/:status', function( req, res, next){
+        if( !checkRequest( req, res ) ) return;
+
+        var status = req.params.status;
+
+        collection.find( { fbId: req.session.fbId,
+                           status: status } )
+            .toArray( handleResponse( req, res, next ) );
         
-    reportDB.getReportOfStatusOfFbId( req.session.fbId, status,  onSuccess, onError );    
-});
+    });
 
 
-router.get( '/current', function( req, res, next ){
-    if( !chechRequest( req, res ) ) return;
+    router.get( '/current', function( req, res, next ){
+        if( !checkRequest( req, res ) ) return;
 
-    function onSuccess( result ){
-        res.result = result;
-        return response( req, res );
-    };
-    function onError( err ){
-        return next( err );
-    };
-    reportDB.getReportOfFbId( req.session.fbId, onSuccess, onError );
-});
+        collection.find( { fbId: req.session.fbId } )
+            .toArray( handleResponse( req, res, next ) );
+    });
 
-router.post( '/current', function( req, res, next ){
-    if( !chechRequest( req, res ) ) return;
+    router.post( '/current', function( req, res, next ){
+        if( !checkRequest( req, res ) ) return false;
 
-    function onGetSuccess( result ){
-        var report = req.query;
-        report.fbId = req.session.fbId;
-        report.timestamp = Date.now();
-        report.status = "unsolved";
-        if( result.length === 0 ){
-            function onAddSuccess( result ){
-                return res.json( { result: "success" } );
-            };
-            return reportDB.addReport( report, onAddSuccess, onError );
-        }else{
-            function onUpdateSuccess( result ){
-                return res.json( { result: "success" } );
-            };
-            return reportDB.updateReport( result[0]._id, report , onUpdateSuccess, onError );                
-        }
-    };
-    function onError( err ){
-        return next( err );
-    };
-    reportDB.getReportOfStatusOfFbId( req.session.fbId, "unsolved" , onGetSuccess, onError );    
-});
+        function onFind( err, result ){
+            if( err !== null ){ return next( err ); }
+            var report = req.query;
+            report.fbId = req.session.fbId;
+            report.status = "unsolved";
+            report.timestamp = Date.now();
+            if( result.length !== 0 ){
+                return collection.update( {fbId: req.session.fbId, status: "unsolved" },
+                                          {$set: report}, handle( req, res, next ) );
+            }else{
+                return collection.insertOne( report, handle( req, res, next) );
+            }
+        };
+
+        return collection.find( { fbId: req.session.fbId, status: "unsolved" } )
+            .toArray( onFind );
+
+    });
 
 
-router.get( '/all/status/:status', function( req, res, next){
-    if( !chechRequest( req, res ) ) return;
+    router.get( '/all/status/:status', function( req, res, next){
+        if( !checkRequest( req, res ) ) return;
+        collection.find( { status: req.params.status } )
+            .toArray( handleResponse( req, res, next ) );        
+    });
 
-    function onSuccess( result ){
-        res.result = result;
-        return response( req, res );
-    };
-    function onError( err ){
-        return next( err );
-    }
-    reportDB.getReportOfStatus( req.params.status, onSuccess, onError );    
-});
+    router.get( '/all/period/:start/:end', function( req, res, next){
+        if( !checkRequest( req, res ) ) return;
 
-router.get( '/all/period/:start/:end', function( req, res, next){
-    if( !chechRequest( req, res ) ) return;
+        var timeStart = Number( req.params.start );
+        var timeEnd = Number( req.params.end );
 
-    function onSuccess( result ){
-        res.result = result;
-        return response( req, res );
-    };
-    function onError( err ){
-        return next( err );
-    }
-    var timeStart = Number( req.params.start );
-    var timeEnd = Number( req.params.end );
-    reportDB.getReportOfPeriod( timeStart, timeEnd, onSuccess, onError );    
-});
+        collection.find( { timestamp:
+                           { $gte: timeStart,
+                             $lt: timeEnd }
+                         } )
+            .toArray( handleResponse(req, res, next ) );
+    });
 
-// To be implemented
-router.get( '/all/:prop/:value', function( req, res, next){
-    if( !chechRequest( req, res ) ) return;
+    // To be implemented
+    router.get( '/all/:prop/:value', function( req, res, next){
+        if( !checkRequest( req, res ) ) return;
 
-    function onSuccess( result ){
-        res.result = result;
-        return response( req, res );
-    };
-    function onError( err ){
-        return next( err );
-    }
-    reportDB.getReportOfFbId( req.params.fbId , onSuccess, onError );    
-});
+        var query = {};
+        query[req.params.prop] = req.params.value;
+        collection.find( query )
+            .toArray( handleResponse( req, res, next ) );
+    });
 
 
-router.post( '/id/:reportId', function( req, res, next ){
-    if( !chechRequest( req, res ) ) return;
+    router.post( '/id/:reportId', function( req, res, next ){
+        if( !checkRequest( req, res ) ) return false;
+        var reportId = req.params.reportId;
+        if( !ObjectId.isValid( reportId ) ){
+            return  res.json( { error: "invalid reportID" } );
+        }        
+        return collection.update( { _id: new ObjectId( reportId ) },
+                           { $set: req.query }, handle( req, res, next ) );
+    });   
 
-    function onSuccess( result ){
-        return res.json( { result: "success" } );
-    };
-    function onError( err ){
-        return next( err );
-    }
-    reportDB.updateReport( req.params.reportId, req.query , onSuccess, onError );    
-});   
-
-
-module.exports = router;
+    return router;
+};

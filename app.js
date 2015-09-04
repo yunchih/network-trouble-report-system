@@ -3,7 +3,7 @@ var app = express();
 
 var logger = require('morgan');
 
-var dbConfig = require('./config/db.js');
+var database = require('./modules/db.js');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
@@ -19,43 +19,40 @@ var report = require( './middlewares/report.js' );
 var register = require( './middlewares/register.js' );
 
 
-app.use( '/static', express.static('static') );
+database.init( function( db ){
 
+    app.use( '/static', express.static('static') );
+   
+    app.use(session({
+        secret: 'fdg  hjg oi hghdjfg js hgsha;hga;rua urjoiuh h',
+        saveUninitialized: false,
+        resave: false,
+        store: new MongoStore({ db: db, ttl: 3600, touchAfter: 3600 })
+    }));
 
-// configure Express
-// app.use(logger());
-// app.use(bodyParser());
+    app.use(passport.initialize());
+    app.use(passport.session());
 
-app.use(session({
-    secret: 'fdg  hjg oi hghdjfg js hgsha;hga;rua urjoiuh h',
-    store: new MongoStore({ url: dbConfig.url })
-}));
+    var onFBLogin = function( accessToken, refreshToken, profile, done) {
+        done( null, profile );
+    };
 
+    app.use( '/fb-auth', fbAuth( onFBLogin ) );
 
-app.use(passport.initialize());
-app.use(passport.session());
+    app.use( function(req, res, next) {
+        if (req.isAuthenticated()) {
+            //req.session.permission = req.session.permission || "nobody";
+            return next();
+        }
+        else{ return res.json( { error: "fb not login" } ); }
+    });
 
+    app.use( checkUser(db) );
 
-var onFBLogin = function( accessToken, refreshToken, profile, done) {
-    done( null, profile );
-};
+    app.use( '/api/1.0/register', register );
 
-app.use( '/fb-auth', fbAuth( onFBLogin ) );
+    app.use( '/api/1.0/user/', user(db) );
+    app.use( '/api/1.0/report/', report(db) );
 
-app.use( function(req, res, next) {
-    if (req.isAuthenticated()) {
-        req.session.permission = "nobody";
-        return next();
-    }
-    else{ return res.json( { error: "fb not login" } ); }
+    app.listen( 3000 );
 });
-
-
-app.use( '/register', register );
-
-app.use( checkUser );
-
-app.use( '/api/1.0/user/', user );
-app.use( '/api/1.0/report/', report );
-
-app.listen( 3000 );

@@ -1,117 +1,113 @@
-var userDB = require('../modules/user-db.js');
+//var userDB = require('../modules/user-db.js');
 var express = require('express');
 var router = express.Router();
 var config = require( '../config/user.js' );
 var checkRequest = require( '../modules/permission.js' ).request( config );
 var response = require( '../modules/permission.js' ).response( config );
 
+module.exports = function( db ){
+    
+    var collection = db.collection('users');
 
-
-router.get( '/current', function( req, res, next){
-    if( !checkRequest( req, res ) ){
-	return;
-}    
-    function onSuccess( user ){
-        res.result = user;
-        return response( req, res );
+    var handleResponse = function( req, res, next ){
+        return function( err, result ){
+            if( err !== null ){
+                return next( err );
+            }else{
+                res.result = result;
+                return response( req, res );
+            }
+        };
     };
-    function onError( err ){
-        return next( err );
-    }
 
-    userDB.findUserByFBId( req.session.fbId, onSuccess, onError );
-    
-});
-
-
-
-router.post( '/current', function( req, res, next ){
-    if( !checkRequest( req, res ) ){
-        return;
-    }
-
-    function onSuccess( user ){
-        return res.json({ result: "success" });
+    var handle = function( req, res, next ){
+        return function( err, result ){
+            if( err !== null ){
+                return next( err );
+            }else{
+                res.result = result;
+                return res.json( { success: true } );
+            }
+        };
     };
-    function onError( err ){
-        return next( err );
-    };
-    userDB.updateUserByFBId( req.session.fbId, req.query, onSuccess, onError );
 
     
-});
+    router.get( '/current', function( req, res, next){
+        if( !checkRequest( req, res ) ){
+	    return;
+        }            
+        collection
+            .find( { "fbId": req.session.fbId } )
+            .toArray( handleResponse(req, res, next ));        
 
+    });
 
-router.get( '/:prop/:value', function( req, res, next){
-    if( !checkRequest( req, res ) ){
-	return;
-    }
-    
-    function onSuccess( user ){
-        res.result = user;
-        return response( req, res );
-    };
-    function onError( err ){
-        return next( err );
-    }
-    userDB.findUser( req.params.prop, req.params.value , onSuccess, onError );    
+    router.post( '/current', function( req, res, next ){
+        if( !checkRequest( req, res ) ){
+            return;
+        }
+        
+        collection
+            .update( { "fbId": req.session.fbId },
+                     { $set: req.query },
+                     handle( req, res, next ) );        
+    });
 
-    
-});
+    router.get( '/:prop/:value', function( req, res, next){
+        if( !checkRequest( req, res ) ){
+	    return;
+        }
 
-router.post( '/:prop/:value', function( req, res, next ){
-    if( !checkRequest( req, res ) ){
-	return;
-    }
-    
-    function onSuccess( result ){        
-        return res.json( { result: "success" } );
-    };
-    function onError( err ){
-        return next( err );
-    }
-    userDB.updateUser( req.params.prop, req.params.value, req.query , onSuccess, onError );    
+        var query = {};
+        query[req.params.prop] = req.params.value;
+        collection
+            .find( query )
+            .toArray( handleResponse( req, res, next ) );        
+    });
 
-    
-});
+    router.post( '/:prop/:value', function( req, res, next ){
+        if( !checkRequest( req, res ) ){
+	    return;
+        }
 
-router.get( '/query', function( req, res, next ){
-    if( !checkRequest( req, res ) ){
-	return;
-    }
-    
-    function onSuccess( result ){
-        res.result = result;
-        return response( req, res );
-    };
-    function onError( err ){
-        return next( err );
-    }
-    var query = JSON.parse( req.query.query );
-    userDB.findUserByQuery( query, onSuccess, onError );
+        var query = {};
+        query[req.params.prop] = req.params.value;
 
-    
-});
+        collection
+            .update( query, { $set: req.query }, handle( req, res, next ) );        
+    });
 
-            
-router.post( '/query', function( req, res, next ){
-    if( !checkRequest( req, res ) ){
-	return;
-    }
-    
-    function onSuccess( result ){        
-        res.result = result;
-        return next();
-    };
-    function onError( err ){
-        return next( err );
-    }
-    var query = JSON.parse( req.query.query );
-    userDB.updateUserByQuery( query, req.query.user, onSuccess, onError );
+    router.get( '/query', function( req, res, next ){
+        if( !checkRequest( req, res ) ){
+	    return;
+        }
+        
+        var query = JSON.parse( req.query.query );
+        
+        collection
+            .find( query )
+            .toArray( handleResponse( req, res, next ) );
+    });
 
     
-});
+    router.post( '/query', function( req, res, next ){
+        if( !checkRequest( req, res ) ){
+	    return;
+        }
+        
+        function onSuccess( result ){        
+            res.result = result;
+            return next();
+        };
+        function onError( err ){
+            return next( err );
+        }
 
+        var query = JSON.parse( req.query.query );
+        collection
+            .update( query, {$set: req.query.user}, handle( req, res, next ) );
+    });
 
+    return router;
 
-module.exports = router;
+};
