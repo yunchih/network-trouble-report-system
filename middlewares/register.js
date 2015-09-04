@@ -1,7 +1,7 @@
 var userDB = require('../modules/user-db.js');
 var express = require('express');
 var router = express.Router();
-var config = require( '../config/new-user.js' );
+var config = require( '../config/register.js' );
 var checkRequest = require( '../modules/permission.js' ).request( config );
 // var response = require( '../modules/permission.js' ).response( config );
 
