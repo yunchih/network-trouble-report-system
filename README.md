@@ -13,7 +13,7 @@ Here is some ideas about the front end. I hope they can be taken into considerat
 ### Miscellaneous
 
 * This system is NOT belong to any organization for now!! Keep this in mind, so any organization logo is improper.
-* I have not figure out what to return if post succeed or some error occur. Therefore, the front-end developer may have to keep some flexbility.
+* Error: Basically, most error will take the form `{ error: 'description' }`. And the other error should be respond with status code 500 ( Internal Server Error ).
 * Ignore chat room for now.
 
 ### User-related part
