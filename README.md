@@ -27,6 +27,10 @@ Here is some ideas about the front end. I hope they can be taken into considerat
 
 * This system is NOT belong to any organization for now!! Keep this in mind, so any organization logo is improper.
 * Error: Basically, most error will take the form `{ error: 'description' }`. And the other error should be respond with status code 500 ( Internal Server Error ).
+  * If query properties not pass the regular expression filter, The error massage will be:
+````
+{ error: "invalid properties", invalidProp: [ 'invalid', 'properties', 'such', 'as', 'studentId' ] } );                          
+````
 * Ignore chat room for now.
 
 ### User-related part
