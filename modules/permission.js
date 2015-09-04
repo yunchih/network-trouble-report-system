@@ -16,14 +16,31 @@ module.exports = {
             if( allowField ){
                 var length = allowField.length;
                 for( var i = 0 ; i < length ; ++i  ){
-                    var key = allowField[i];
-                    if( req.query[key] ){
-                        query[key] = req.query[key];
+                    var prop = allowField[i];
+                    if( req.query[prop] ){
+                        query[prop] = req.query[prop];
                     }
                 }
             }
+            
+            // Filter query format
+            var reg = config.queryReg || {};
+            var invalidProp = [];
+            for( prop in reg ){
+                if( query[prop] ){
+                    if( !reg[prop].test( query[prop] ) ){
+                        invalidProp.push( prop );
+                    }
+                }
+            }
+            if( invalidProp.length > 0 ){
+                res.json( { error: "invalid properties", invalidProp: invalidProp } );                          
+                return false;
+            }
+            
             req.query = query;
 
+            
             // Filter access
             var permissionConfig = config.permissionConfig;
             if( ! permissionConfig[reqPermission] ||
