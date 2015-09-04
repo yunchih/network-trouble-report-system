@@ -135,7 +135,7 @@ This category of APIs provide user-related operation.
     * ip
     * mac
  * Retrun: If successful
-   *`{ "result": "success" }`
+   *`{ "success": true }`
  * Description: Update the information of current login user.
  * Permission require: general, nma.
 * `GET /user/:prop/:value`
@@ -219,7 +219,7 @@ This category of API is about problem reports.
     * status
     * solution
  * Retrun: (if success)
- * `{ "result": "success" }`
+ * `{ "success": true }`
  * Description: Submit one report. If the current user have one report unsolved, this operation will update the existed one.
  * Permission require: general, nma. 
 * `GET /report/all/:prop/:value`
@@ -257,6 +257,6 @@ This category of API is about problem reports.
     * reportId: the _id of the report.
  * query: none
  * Return: (if successful)
-    * `{"result": success}`
+    * `{"success": true}`
  * Description: update the fields of the report with the report id.
  * Permission: nma.
