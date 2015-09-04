@@ -6,7 +6,6 @@ module.exports = {
     request: function( config ){
         
         return function( req, res ){
-            console.log( req.route );
             var path = req.route.path;
             var method = req.route.stack[0].method;
             var reqPermission = req.session.permission;
@@ -27,6 +26,11 @@ module.exports = {
 
             // Filter access
             var permissionConfig = config.permissionConfig;
+            if( ! permissionConfig[reqPermission] ||
+                ! permissionConfig[reqPermission][method] ){
+                res.json( { result: "permission deny" } );
+                return false;
+            }
             if( permissionConfig[reqPermission][method].indexOf( path ) === -1 ){
                 res.json( { result: "permission deny" } );
                 return false;
