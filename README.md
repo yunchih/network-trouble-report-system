@@ -3,8 +3,21 @@
 
 ## Status
 
-user part works basically.
-But still don't pull down the repo so that I will be less embarrassed. 
+user and report parts works basically.
+
+### Configuration
+
+Config `config/db.js` and `config/fb-app.js`
+
+`config/fb-app.js` file
+````
+exports.appId = "String~~";
+exports.appSecret = "String too~~";
+````
+
+### Run
+
+node app.js
 
 ## Functionality of the front-end
 
