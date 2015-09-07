@@ -6,9 +6,7 @@ var checkRequest = require( '../modules/permission.js' ).request( config );
 var response = require( '../modules/permission.js' ).response( config );
 var ObjectId = require('mongodb').ObjectId;
 
-module.exports = function( db ){
-
-    var collection = db.collection("reports");
+module.exports = function( reportCollection ){
 
     var handleResponse = function( req, res, next ){
         return function( err, result ){
@@ -38,7 +36,7 @@ module.exports = function( db ){
 
         var status = req.params.status;
 
-        collection.find( { fbId: req.session.fbId,
+        reportCollection.find( { fb_id: req.session.fbId,
                            status: status } )
             .toArray( handleResponse( req, res, next ) );
         
@@ -48,7 +46,7 @@ module.exports = function( db ){
     router.get( '/current', function( req, res, next ){
         if( !checkRequest( req, res ) ) return;
 
-        collection.find( { fbId: req.session.fbId } )
+        reportCollection.find( { fb_id: req.session.fbId } )
             .toArray( handleResponse( req, res, next ) );
     });
 
@@ -58,18 +56,18 @@ module.exports = function( db ){
         function onFind( err, result ){
             if( err !== null ){ return next( err ); }
             var report = req.query;
-            report.fbId = req.session.fbId;
+            report.fb_id = req.session.fbId;
             report.status = "unsolved";
             report.timestamp = Date.now();
             if( result.length !== 0 ){
-                return collection.update( {fbId: req.session.fbId, status: "unsolved" },
+                return reportCollection.update( {fb_id: req.session.fbId, status: "unsolved" },
                                           {$set: report}, handle( req, res, next ) );
             }else{
-                return collection.insertOne( report, handle( req, res, next) );
+                return reportCollection.insertOne( report, handle( req, res, next) );
             }
         };
 
-        return collection.find( { fbId: req.session.fbId, status: "unsolved" } )
+        return reportCollection.find( { fb_id: req.session.fbId, status: "unsolved" } )
             .toArray( onFind );
 
     });
@@ -77,7 +75,7 @@ module.exports = function( db ){
 
     router.get( '/all/status/:status', function( req, res, next){
         if( !checkRequest( req, res ) ) return;
-        collection.find( { status: req.params.status } )
+        reportCollection.find( { status: req.params.status } )
             .toArray( handleResponse( req, res, next ) );        
     });
 
@@ -87,7 +85,7 @@ module.exports = function( db ){
         var timeStart = Number( req.params.start );
         var timeEnd = Number( req.params.end );
 
-        collection.find( { timestamp:
+        reportCollection.find( { timestamp:
                            { $gte: timeStart,
                              $lt: timeEnd }
                          } )
@@ -100,7 +98,7 @@ module.exports = function( db ){
 
         var query = {};
         query[req.params.prop] = req.params.value;
-        collection.find( query )
+        reportCollection.find( query )
             .toArray( handleResponse( req, res, next ) );
     });
 
@@ -111,7 +109,7 @@ module.exports = function( db ){
         if( !ObjectId.isValid( reportId ) ){
             return  res.json( { error: "invalid reportID" } );
         }        
-        return collection.update( { _id: new ObjectId( reportId ) },
+        return reportCollection.update( { _id: new ObjectId( reportId ) },
                            { $set: req.query }, handle( req, res, next ) );
     });   
 

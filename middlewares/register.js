@@ -5,30 +5,37 @@ var config = require( '../config/register.js' );
 var checkRequest = require( '../modules/permission.js' ).request( config );
 // var response = require( '../modules/permission.js' ).response( config );
 
-
-router.post( '/', function( req, res, next ){
-    if( !checkRequest( req, res ) ){
-        return false;
-    }
-
-    if( req.query.agree !== "true" ){
-        return res.json( {error: "User doesn't agree with term of service"} ); 
-    }
-
-    delete req.query.agree;
+module.exports = function( userCollection, auth ){
     
-    var user = req.query;
-    user.fbId = req.user.id;
-    user.permission = "general";
+    router.post( '/', function( req, res, next ){
+        if( !checkRequest( req, res ) ){
+            return false;
+        }
 
-    function added( result ){
-        console.log( "Create a new user." );
-        req.session.fbId = user.id;
-        req.session.permission = user.permission;           
-        res.send( { success: "true" } );
-    };
-    
-    userDB.addUser( user, added, next ); 
-});
+        if( req.query.agree !== "true" ){
+            return res.json( {error: "User must agree with term of service before registration"} ); 
+        }
 
-module.exports = router;
+        delete req.query.agree;
+        
+        var user = req.query;
+        user.fb_id = req.session.fbId;
+        user.permission = "general";
+
+        function added( result ){
+            console.log( "Create a new user." );
+            var accessToken = auth.encode( {
+                fb_id: user.id,
+                permission: user.permission
+            } );
+            res.send( {
+                success: true,
+                access_token: accessToken
+            } );
+        };
+            
+        return userDB.addUser( user, added, next ); 
+    });
+
+    return router;
+};

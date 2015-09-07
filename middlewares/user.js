@@ -5,10 +5,8 @@ var config = require( '../config/user.js' );
 var checkRequest = require( '../modules/permission.js' ).request( config );
 var response = require( '../modules/permission.js' ).response( config );
 
-module.exports = function( db ){
+module.exports = function( userCollection ){
     
-    var collection = db.collection('users');
-
     var handleResponse = function( req, res, next ){
         return function( err, result ){
             if( err !== null ){
@@ -36,8 +34,8 @@ module.exports = function( db ){
         if( !checkRequest( req, res ) ){
 	    return;
         }            
-        collection
-            .find( { "fbId": req.session.fbId } )
+        userCollection
+            .find( { "fb_id": req.session.fbId } )
             .toArray( handleResponse(req, res, next ));        
 
     });
@@ -47,8 +45,8 @@ module.exports = function( db ){
             return;
         }
         
-        collection
-            .update( { "fbId": req.session.fbId },
+        userCollection
+            .update( { "fb_id": req.session.fbId },
                      { $set: req.query },
                      handle( req, res, next ) );        
     });
@@ -60,7 +58,7 @@ module.exports = function( db ){
 
         var query = {};
         query[req.params.prop] = req.params.value;
-        collection
+        userCollection
             .find( query )
             .toArray( handleResponse( req, res, next ) );        
     });
@@ -73,7 +71,7 @@ module.exports = function( db ){
         var query = {};
         query[req.params.prop] = req.params.value;
 
-        collection
+        userCollection
             .update( query, { $set: req.query }, handle( req, res, next ) );        
     });
 
@@ -84,7 +82,7 @@ module.exports = function( db ){
         
         var query = JSON.parse( req.query.query );
         
-        collection
+        userCollection
             .find( query )
             .toArray( handleResponse( req, res, next ) );
     });
@@ -104,7 +102,7 @@ module.exports = function( db ){
         }
 
         var query = JSON.parse( req.query.query );
-        collection
+        userCollection
             .update( query, {$set: req.query.user}, handle( req, res, next ) );
     });
 

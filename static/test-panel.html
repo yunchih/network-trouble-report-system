@@ -5,13 +5,16 @@
         <title>
             Test
         </title>
+        <script src="./js/fb.js"></script>
         <script src="https://code.angularjs.org/1.4.5/angular.js"></script>
         <script src="https://code.angularjs.org/1.4.5/angular-sanitize.js"></script>
         <script src="./js/controller.js"></script>
     </head>
     <body ng-app="testUtil" ng-controller="panelController">
-        <div>
-            <a href="/fb-auth/login?redirect=/static/test-panel.html">Login</a>
+        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+        </fb:login-button>
+
+        <div id="status">
         </div>
         
         <div>

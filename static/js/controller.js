@@ -7,13 +7,14 @@ var apis = [
         url: "/api/1.0/register",
         method: "post",
         fields: [
+            'access_token',
             'name',
-            'roomNumber',
+            'room_number',
             'ip',
             'mac',
-            'fbId',
+            'fb_id',
             'permission',
-            'studentId',
+            'student_id',
             'agree'
         ]
     },
@@ -22,6 +23,7 @@ var apis = [
         url: "/api/1.0/user/current",
         method: "get",
         fields: [
+            'access_token'
         ]
     },
 
@@ -29,32 +31,35 @@ var apis = [
         url: "/api/1.0/user/current",
         method: "post",
         fields: [
+            'access_token',
             'name',
-            'roomNumber',
+            'room_number',
             'ip',
             'mac',
-            'fbId',
+            'fb_id',
             'permission',
-            'studentId'
+            'student_id'
         ]
     },
 
     {
         url: "/api/1.0/user/:prop/:value",
-        method: "get"
+        method: "get",
+        fields: ['access_token']
     },
     
     {
         url: "/api/1.0/user/:prop/:value",
         method: "post",
         fields: [
+            'access_token',
             'name',
-            'roomNumber',
+            'room_number',
             'ip',
             'mac',
-            'fbId',
+            'fb_id',
             'permission',
-            'studentId'
+            'student_id'
         ]
     },
 
@@ -62,6 +67,7 @@ var apis = [
         url: "/api/1.0/user/query",
         method: "get",
         fields: [
+            'access_token',
             "query"
         ]
     },
@@ -69,43 +75,43 @@ var apis = [
     {
         url: "/api/1.0/report/current/:status",
         method: "get",
-        fields: []
+        fields: ['access_token']
     },
 
     {
         url: "/api/1.0/report/current",
         method: "get",
-        fields: []
+        fields: ['access_token']
     },
     
     {
         url: "/api/1.0/report/current",
         method: "post",
-        fields: ['issue', 'description', 'status', 'solution', 'soved-by', 'ps']
+        fields: ['access_token','issue', 'description', 'status', 'solution', 'soved_by', 'ps']
     },
 
     {
         url: "/api/1.0/report/all/status/:status",
         method: "get",
-        fields: []
+        fields: ['access_token']
     },
 
     {
         url: "/api/1.0/report/all/period/:start/:end",
         method: "get",
-        fields: []
+        fields: ['access_token']
     },
 
     {
         url: "/api/1.0/report/all/:prop/:value",
         method: "get",
-        fields: []
+        fields: ['access_token']
     },
 
     {
         url: "/api/1.0/report/id/:reportId",
         method: "post",
-        fields: ['issue', 'description', 'status', 'solution', 'solvedBy', 'ps']
+        fields: ['access_token', 'issue', 'description', 'status', 'solution', 'solved_by', 'ps']
     }
     
 ];
@@ -116,6 +122,7 @@ app.controller( "panelController", function( $scope, $http ){
     $scope.query = {};
     $scope.request = function(){
         var currentApi = apis[$scope.currentApiIndex];
+        $scope.query.access_token = access_token;
         if( currentApi.method === "get" ){
             $scope.message = "get";
             $http.get( currentApi.url, { params: $scope.query } )
