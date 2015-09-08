@@ -107,8 +107,13 @@ Any request on APIs provided is welcomed.
 * Return of DB: Array.
 * Feedback: If anymore API or any modification of configuration is needed, please open issue to discuss.
 
-###
+### Format of some query fields
 
+* student_id:
+  * A valid NTU student id with first character uppercase.
+* room_number:
+  * Room number along with the code of bed uppercase. Ex. 123C
+ 
 ### Login API
 
 (This URL is not to be call as AJAX)
@@ -129,21 +134,53 @@ Any request on APIs provided is welcomed.
       * `{ error: "invalid token" }`
     * If the access_token of facebook is not of the user:
       * `{ error: "token of other user" }`
-### User API
+    
+### Register API
 
-* `POST /register`
-  * Parameter: none.
-  * Query: 
-    * name
-    * roomNumber
-    * ip
-    * mac
-    * fb-id
-    * studentId
-    * agree
-      * Agree with term of service. This query must be true otherwise the request will be rejected.
-  * Description: Register new user.
-  * Permission: Only those who have login and have not complete register process.
+* `POST /api/1.0/register`
+  * Parameter: none
+  * Query:
+    * name: Optional.
+    * room_number: Optional.
+    * student_id: Required.
+    * agree: Must be true. 
+    * validate_code: Required. The validation code which is sent by email.
+    * recaptcha: Required. The response of recaptcha.
+  * Description:
+    * If register success it will return in json:
+      * success: it shoud be boolean `true`.
+      * access_token: new access_token with permission updated, so that user can call API using this token.
+    * If the field of student_id is empty:
+      * `{ error: "student_id can not be empty" }`
+    * If the student_id is not belong to the dorm:
+      * `{error: "student_id not belong to the drom"}`
+    * If the student_id has been registered:
+      * `{ error: "The student ID has been registered." }`
+    * If the response of the recaptcha is invalid:
+      * `{ error: "Invalid recaptcha response." }`
+    * If the agree field is not true:
+      * `{error: "User must agree with term of service before registration"}`
+    * If the validation code is invalid:
+      * `{error: "Validation code incorrect!"}`
+* `POST /api/1.0/register/mail`
+  * Parameter: none
+  * Query:
+    * recaptcha: Required. The response of recaptcha.
+    * student_id: Required.
+  * Description:
+    * If register success it will return in json:
+      * success: it shoud be boolean `true`.
+    * If the field of student_id is empty:
+      * `{ error: "student_id can not be empty" }`
+    * If the student_id is not belong to the dorm:
+      * `{error: "student_id not belong to the drom"}`
+    * If the student_id has been registered:
+      * `{ error: "The student ID has been registered." }`
+    * If the response of the recaptcha is invalid:
+      * `{ error: "Invalid recaptcha response." }`
+    * If the agree field is not true:
+
+### User API
   
 This category of APIs provide user-related operation.
 
