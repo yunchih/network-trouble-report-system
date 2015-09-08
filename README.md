@@ -116,7 +116,6 @@ Any request on APIs provided is welcomed.
  
 ### Login API
 
-(This URL is not to be call as AJAX)
 * `/auth/login`
   * Query:
       * fb_id
