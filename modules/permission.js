@@ -45,7 +45,7 @@ module.exports = {
             var permissionConfig = config.permissionConfig;
             if( ! permissionConfig[reqPermission] ||
                 ! permissionConfig[reqPermission][method] ){
-                res.json( { error: "permission deny" } );
+                res.status(403).json( { error: "Permission deny" } );
                 return false;
             }
             if( permissionConfig[reqPermission][method].indexOf( path ) === -1 ){

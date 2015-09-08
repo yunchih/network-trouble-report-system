@@ -29,7 +29,7 @@ module.exports = function(){
             };
             return jwt.verify(req.query.access_token, secret, option, function(err, decoded) {
                 if( err !== null ){
-                    return next( err );
+                    return res.status(401).json({error: "Invalid access_token"});
                 }
                 delete req.query.access_token;
                 req.session = { fbId: decoded.fb_id,
@@ -39,7 +39,7 @@ module.exports = function(){
         },
         verify: function( req, res, next ){
             if( ! req.session.permission ){
-                return res.json( {error: "Permission deny"} );
+                return res.status(401).json( {error: "Not login."} );
             }else{
                 return next();
             }

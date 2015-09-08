@@ -24,7 +24,11 @@ var register = require( './middlewares/register.js' );
 database.init( function( db ){
 
     app.use( '/static', express.static('static') );
-       
+
+    app.use( '/static', function( req, res, next ){
+        res.status(404).json( {error: "Not found."} );
+    });
+    
     app.use( '/auth', fbAuth(db.collection('users'), auth) );
     
     app.use( auth.session );
@@ -37,5 +41,9 @@ database.init( function( db ){
     app.use( '/api/1.0/user/', user(db.collection('users')) );
     app.use( '/api/1.0/report/', report(db.collection('reports')) );
 
+    app.use( function( req, res, next){
+        res.status(404).json( {error: "Not found."} );
+    });
+    
     app.listen( 3000 );
 });
