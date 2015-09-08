@@ -1,14 +1,14 @@
-var generalProp = ['issue', 'description', 'status', 'solution', 'timestamp'];
-var nmaProp = ['_id', 'fbId', 'issue', 'description', 'status', 'solution', 'solvedBy', 'ps', 'userUpdateTime', 'timestamp' ];
+var generalProp = ['issue', 'description', 'status', 'solution', 'timestamp', 'user_available_time'];
+var nmaProp = ['_id', 'fbId', 'issue', 'description', 'status', 'solution', 'solved_by', 'ps', 'user_update_time', 'timestamp', 'user_available_time' ];
 
 var config = {
     queryAllowField: {        
         '/current': {
-            post: [ 'issue', 'description' ]
+            post: [ 'issue', 'description', 'user_available_time' ]
         },
         
         '/id/:reportId': {
-            post: [ 'issue', 'description', 'status', 'solution', 'solvedBy' ]
+            post: [ 'issue', 'description', 'status', 'solution', 'solved_by' ]
         }
     },
 
@@ -35,7 +35,14 @@ var config = {
                     '/id/:reportId'
                   ]
         }
+    },
+    
+    queryReg: {
+        issue: /.{0,1000}/,
+        description: /.{0,1000}/,
+        user_available_time: /.{0,200}/
     }
+
 };
 
 module.exports = config;
