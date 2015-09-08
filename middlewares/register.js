@@ -12,7 +12,7 @@ module.exports = function( userCollection, auth ){
 
     router.use(function( req, res, next){
         if( !req.query.student_id ){
-            return res.json( { error: "student_id can not be empty" } );
+            return res.json( { error: "student_id can not be empty." } );
         }
         userCollection.find( {student_id: req.query.student_id} )
             .toArray( function( err, result ){
@@ -20,7 +20,7 @@ module.exports = function( userCollection, auth ){
                     return next( err );
                 }
                 if( result.length === 0 ){
-                    return res.json( {error: "Not a member of dorm."} );
+                    return res.json( {error: "student_id not belong to the drom"} );
                 }
                 if( result[0].fb_id ){
                     return res.json( {error: "The student ID has been registered."} );

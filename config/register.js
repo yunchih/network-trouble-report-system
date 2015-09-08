@@ -1,5 +1,4 @@
 var userProperty = [
-    '_id',
     'name',
     'room_number',
     'student_id',

@@ -33,7 +33,7 @@ module.exports = function( userCollection, auth ){
             var tokenData = fbRes.data;
             var now = Date.now();
             if( tokenData.expire_at > now ){
-                return res.json( { error: "facebook token expired" } );
+                return res.json( { error: "Facebook token expired." } );
             }
             if( tokenData.app_id !== fbConfig.appId ){
                 return res.json( { error: "token of other App" } );
