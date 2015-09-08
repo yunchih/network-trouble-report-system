@@ -252,7 +252,13 @@ This category of APIs provide user-related operation.
  * Retrun: (array of)
  * Description: Get all information of the users that satisfy the query fields.
  * Permission require: nma. 
-
+* `POST /user/new-user`
+  * Parameter: none
+  * Query:
+    * users: Array of JSON format. Each element should at least have `"student_id"` property. Ex. `[{"student_id": "XXX"}]`
+  * Return: If success
+    * `{ "success": true }`
+    
 ### Report APIs
 
 This category of API is about problem reports.
