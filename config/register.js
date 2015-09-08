@@ -10,12 +10,16 @@ module.exports = {
     queryAllowField:{
         "/":{
             "post": userProperty
+        },
+        "/mail":{
+            "post": [ 'student_id' ]
         }
     },
     permissionConfig: {
         nobody: {
             post: [
-                "/"
+                "/",
+                "/mail"
             ]
         }
     },

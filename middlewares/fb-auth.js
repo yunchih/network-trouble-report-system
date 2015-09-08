@@ -11,15 +11,21 @@ module.exports = function( userCollection, auth ){
         var reqFbId = req.query.fb_id;
         var token = req.query.access_token;
         var appSecret = fbConfig.appId + "|" + fbConfig.appSecret;
-
+        var data = "";
+        
         https.get( "https://graph.facebook.com/debug_token?input_token=" + token +
                    "&access_token=" + appSecret, function( res ){
-                       return res.on( "data", validate );
+                       res.on( "data", function(chunk){
+                           chunk = chunk || "";
+                           data += chunk.toString();
+                       });                       
+                       return res.on( 'end', validate );
                    }).on( 'error', function( err ){
                        return next( err );
                    });
         
-        function validate( data ){
+        function validate(){
+            
             var fbRes = JSON.parse(data);
             if( fbRes.error ){
                 return next( Error( fbRes.error ) );

@@ -20,6 +20,14 @@ var apis = [
     },
 
     {
+        url: "/api/1.0/register/mail",
+        method: "post",
+        fields: [
+            "student_id"
+        ]
+    },
+    
+    {
         url: "/api/1.0/user/current",
         method: "get",
         fields: [
@@ -73,6 +81,15 @@ var apis = [
     },
 
     {
+        url: "/api/1.0/user/new-user",
+        method: "post",
+        fields: [
+            'users'
+        ]
+    },
+
+
+    {
         url: "/api/1.0/report/current/:status",
         method: "get",
         fields: ['access_token']
@@ -123,6 +140,7 @@ app.controller( "panelController", function( $scope, $http ){
     $scope.request = function(){
         var currentApi = apis[$scope.currentApiIndex];
         $scope.query.access_token = access_token;
+        $scope.query.recaptcha = document.getElementById("g-recaptcha-response").value;
         if( currentApi.method === "get" ){
             $scope.message = "get";
             $http.get( currentApi.url, { params: $scope.query } )

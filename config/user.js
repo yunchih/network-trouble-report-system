@@ -32,7 +32,12 @@ var config = {
                 'query',
                 'user'
             ]
-        }        
+        },
+
+        '/new-user': {
+            post: [ 'users' ]
+        }
+                
     },
 
     resAllowField: {
@@ -60,7 +65,8 @@ var config = {
             post: [
                 '/current',
                 '/:prop/:value',
-                '/query'
+                '/query',
+                '/new-user'
             ]
         }
     },
@@ -74,7 +80,9 @@ var config = {
         'fb_id': /^\d+$/,
         'permission': /^\w+$/,
         'student_id': /^B\d{2}[\dABHJKQZ]\d{5}$/
-    }        
+    },
+
+    validateLength: 32
 };
 
 

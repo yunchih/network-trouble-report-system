@@ -4,6 +4,7 @@ var router = express.Router();
 var config = require( '../config/user.js' );
 var checkRequest = require( '../modules/permission.js' ).request( config );
 var response = require( '../modules/permission.js' ).response( config );
+var crypto = require('crypto');
 
 module.exports = function( userCollection ){
     
@@ -106,6 +107,46 @@ module.exports = function( userCollection ){
             .update( query, {$set: req.query.user}, handle( req, res, next ) );
     });
 
+    router.post( '/new-user', function( req, res, next ){
+        if( !checkRequest( req, res ) ){
+	    return;
+        }
+
+        var users = JSON.parse( req.query.users );
+        var bulk = userCollection.initializeOrderedBulkOp();
+        var counter = 0;
+        var length = users.length;
+        for( var i = 0 ; i < length ; ++i ){
+            if( !users[i] ){
+                continue;
+            }
+            (function (ind){
+                crypto.randomBytes(config.validateLength, function( ex, buf ){
+                    var randomString = buf.toString('base64');
+                    bulk.find({student_id: users[ind].student_id})
+                        .upsert().updateOne({
+                            student_id: users[ind].student_id,
+                            validate_code: randomString
+                        });
+                    counter += 1;
+                    if( counter === length ){
+                        executeBulk();
+                    }                    
+                });
+            })(i);
+        }
+        function executeBulk(){
+            bulk.execute(function(err, result) {
+                if( err !== null ){
+                    next( err );
+                }
+                res.json( { success: true } );
+            });
+        };
+    });
     return router;
 
 };
+
+
+
