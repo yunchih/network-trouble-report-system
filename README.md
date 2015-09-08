@@ -3,16 +3,23 @@
 
 ## Status
 
-user and report parts works basically.
+Basical function works basically.
 
 ### Configuration
 
-Config `config/db.js` and `config/fb-app.js`
+Config `config/db.js`, `config/fb-app.js`, `config/recaptcha.js`
 
 `config/fb-app.js` file
 ````
 exports.appId = "String~~";
 exports.appSecret = "String too~~";
+````
+
+`config/recaptcha.js` file
+````
+module.exports = {
+    secret: "Secret Here"
+};
 ````
 
 ### Run
@@ -100,18 +107,28 @@ Any request on APIs provided is welcomed.
 * Return of DB: Array.
 * Feedback: If anymore API or any modification of configuration is needed, please open issue to discuss.
 
-### Login URL
+###
+
+### Login API
 
 (This URL is not to be call as AJAX)
-* `/fb-auth/login`
+* `/auth/login`
   * Query:
-    * redirect: The URL to be redirected to after login successfully. It must be relative URL.
+      * fb_id
+      * access_token: The access token of facebook.
   * Description:
-    * FB login fail: redirect back to /fb-auth/login.
-    * FB login successfully
-      * Have not completed register process: redirect to register page.
-      * Have completed register process: redirect to the URL specified in the request URL. If not specified, it will redirect to `/static/index.html`
-
+    * If login success, it will return json:
+      * success: boolean, it should be true.
+      * registered: boolean, indicate whether or not the fb ID has been registered (a registered user).
+      * access_token: The access_token granted by this system's server. It will expired in 45 minutes.
+    * If the access_token of facebook has expired:
+      * `{ error: "Facebook token expired." }`
+    * If the access_token of facebook is for other app:
+      * `{ error: "token of other App" }`
+    * If the access_token of facebook is invalid:
+      * `{ error: "invalid token" }`
+    * If the access_token of facebook is not of the user:
+      * `{ error: "token of other user" }`
 ### User API
 
 * `POST /register`
