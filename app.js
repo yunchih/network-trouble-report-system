@@ -23,18 +23,14 @@ var register = require( './middlewares/register.js' );
 
 database.init( function( db ){
 
-    app.use( '/static', express.static('static') );
-
-    app.use( '/static', function( req, res, next ){
-        res.status(404).json( {error: "Not found."} );
-    });
+    app.use( '/', express.static('static') );
     
-    app.use( '/auth', fbAuth(db.collection('users'), auth) );
+    app.use( '/api/1.0/auth', fbAuth(db.collection('users'), auth) );
     
     app.use( auth.session );
     app.use( auth.verify );
 
-    app.get( '/auth/renew', auth.renew );
+    app.get( '/api/1.0/auth/renew', auth.renew );
     
     app.use( '/api/1.0/register', register(db.collection('users'), auth) );
 
