@@ -113,7 +113,8 @@ Any request on APIs provided is welcomed.
   * A valid NTU student id with first character uppercase.
 * room_number:
   * Room number along with the code of bed uppercase. Ex. 123C
- 
+* phone
+  * Valid cellphone number. (09\d{8})
 ### Login API
 
 * `/auth/login`
@@ -195,6 +196,7 @@ This category of APIs provide user-related operation.
     * fb-id
     * permission
     * studentId
+    * phone
  * Description: Get the information of current login user.
  * Permission require: general, nma.
 * `POST /user/current`
@@ -204,6 +206,7 @@ This category of APIs provide user-related operation.
     * roomNumber
     * ip
     * mac
+    * phone
  * Retrun: If successful
    *`{ "success": true }`
  * Description: Update the information of current login user.
@@ -222,6 +225,7 @@ This category of APIs provide user-related operation.
     * fbId
     * permission
     * studentId
+    * phone
  * Description: Get the information of user(s) whose value of property `:prop` is `:value`.
  * Permission require: nma.
 * `POST /user/:prop/:value`
@@ -236,6 +240,7 @@ This category of APIs provide user-related operation.
     * fb-id
     * permission
     * studentId
+    * phone
  * Retrun: (array of)
  * Description: Update the information of user(s) whose value of property `:prop` is `:value`.
  * Permission require: nma. 
@@ -249,6 +254,7 @@ This category of APIs provide user-related operation.
     * fbId
     * permission
     * studentId
+    * phone
  * Retrun: (array of)
  * Description: Get all information of the users that satisfy the query fields.
  * Permission require: nma. 
@@ -273,6 +279,7 @@ This category of API is about problem reports.
     * description
     * status
     * solution
+    * user_available_time
  * Description: Get the information of the report that is submit by current user, and satisfy the status.
  * Permission require: general, nma. 
 * `GET /report/current`
@@ -294,6 +301,7 @@ This category of API is about problem reports.
     * description
     * status
     * solution
+    * user_available_time
  * Retrun: (if success)
  * `{ "success": true }`
  * Description: Submit one report. If the current user have one report unsolved, this operation will update the existed one.
@@ -311,6 +319,7 @@ This category of API is about problem reports.
     * solution
     * solvedBy
     * ps
+    * user_available_time
  * Description: Get all the report whose value of the property `:property` is `:value`.
  * Permission require: nma
 * `GET /report/all/period/:start/:end`
@@ -326,6 +335,7 @@ This category of API is about problem reports.
     * solution
     * solvedBy
     * ps
+    * user_available_time
  * Description: Get all the report of submit in the period.
  * Permission require: nma
 * `POST /report/:reportId`
