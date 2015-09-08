@@ -49,25 +49,29 @@ module.exports = function( userCollection, auth ){
 
         delete req.query.agree;
         
-        var user = req.query;
-        user.fb_id = req.session.fbId;
-        user.permission = "general";
-
         if( req.query.validate_code !== req.validationCode ){
             return res.json( { error: "Validation code incorrect!"} );
         }
+        delete req.query.validate_code;
+
+        var user = req.query;
+        user.fb_id = req.session.fbId;
+        user.permission = "general";
         
         return userCollection.update( { student_id: req.query.student_id },
                                       { $set: user, $unset: {validate_code: ""} }, function(err, result){
-            var accessToken = auth.encode( {
-                fb_id: user.id,
-                permission: user.permission
-            } );
-            res.send( {
-                success: true,
-                access_token: accessToken
-            } );
-        }); 
+                                          if( err !== null ){
+                                              return next( err );
+                                          }
+                                          var accessToken = auth.encode( {
+                                              fb_id: user.id,
+                                              permission: user.permission
+                                          } );
+                                          res.send( {
+                                              success: true,
+                                              access_token: accessToken
+                                          } );
+                                      }); 
     });
         
     router.post( '/mail', function( req, res, next){

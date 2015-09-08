@@ -3,7 +3,8 @@ var userProperty = [
     'name',
     'room_number',
     'student_id',
-    'agree'
+    'agree',
+    'validate_code'
 ];
 
 module.exports = {

@@ -15,7 +15,8 @@ var apis = [
             'fb_id',
             'permission',
             'student_id',
-            'agree'
+            'agree',
+            'validate_code'
         ]
     },
 
