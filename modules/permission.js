@@ -45,11 +45,11 @@ module.exports = {
             var permissionConfig = config.permissionConfig;
             if( ! permissionConfig[reqPermission] ||
                 ! permissionConfig[reqPermission][method] ){
-                res.json( { result: "permission deny" } );
+                res.json( { error: "permission deny" } );
                 return false;
             }
             if( permissionConfig[reqPermission][method].indexOf( path ) === -1 ){
-                res.json( { result: "permission deny" } );
+                res.json( { error: "permission deny" } );
                 return false;
             }
             return true;
