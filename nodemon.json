@@ -1,0 +1,24 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "static/build/*",
+    "static/manifest.appcache"
+  ],
+  "verbose": true,
+  "execMap": {
+    "js": "grunt --gruntfile static/Gruntfile.js && node --harmony"
+  },
+  "events": {
+    "restart": "osascript -e 'display notification \"App restarted due to:\n'$FILENAME'\" with title \"nodemon\"'"
+  },
+  "watch": [
+    "static"
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js json html css",
+  "delay": 1
+}

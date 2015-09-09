@@ -18,12 +18,15 @@ var bodyParser = require("body-parser");
 var user = require('./middlewares/user.js');
 var report = require( './middlewares/report.js' );
 var register = require( './middlewares/register.js' );
+var morgan = require('morgan');
 
 
 
 database.init( function( db ){
+    
+    app.use(express.static('static'));
 
-    app.use( '/', express.static('static') );
+    app.use(morgan('dev'));
     
     app.use( '/api/1.0/auth', fbAuth(db.collection('users'), auth) );
     
