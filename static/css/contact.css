@@ -1,0 +1,209 @@
+#contact .mdl-card__title {
+	background-color: #FFC107;
+	box-shadow: none;
+}
+#contact .mdl-data-table {
+}
+#contact td {
+	color: rgba(0,0,0,0.66);
+}
+#contact td:first-child {
+	color: black;
+}
+.result {
+}
+.panel-title {
+	text-align: center;
+    position: relative;
+    padding: 15px;
+    margin: 0;
+    color: rgba(0,0,0,0.7);
+    background-color:  #FFA907;
+    border-top: 1px solid rgba(0,0,0,0.35);
+	border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+.mdl-data-table thead tr{
+	background-color: #2196F3;
+}
+.mdl-data-table {
+	font-size: 15px;
+}
+#contact .mdl-card-footer-button {
+	text-align: right;
+}
+#results {
+}
+.navigation {
+	opacity: 0;
+	visibility: hidden;
+	cursor: pointer;
+	text-align: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	width: 50%;
+	transition: opacity .5s, transform .1s, width .1s;
+	-webkit-transition: opacity .5s, transform .1s, width .1s;
+}
+.navigation.visible {
+	opacity: 1;
+	visibility: visible;
+}
+.navigation:hover {
+	background-color: rgba(158,158,158,0.2);
+	
+}
+.navigation.hovered > .navigation-indicator {
+	transform: scale(1.1);
+}
+
+.navigation.ng-enter,
+.navigation.ng-leave {
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.navigation.ng-enter {
+    width: 0;
+}
+.navigation.ng-enter-active {
+    width: 50%;
+}
+.navigation.ng-leave {
+    width: 50%;
+}
+.navigation.ng-leave-active {
+    width: 0;
+}
+.navigation-indicator {
+    line-height: 45px;
+    font-size: 25px;
+    text-align: center;
+    padding: 20px;
+    transition: all .2s ease-in-out;
+}
+.navigation-icon {
+    font-size: 35px;
+    margin-top: auto;
+	margin-bottom: auto;
+}
+#next {
+	float: right;
+}
+#previous {
+	float: left;
+}
+
+#result-body {
+	min-height: 400px;
+	width: 100%;
+}
+#result-footer {
+	position: relative;
+	border-top: 1px solid rgba(0,0,0,0.1);
+}
+.panel-description {
+	padding-top: 50px;
+}
+#noTroubleshootNotice {
+	text-align: center;
+}
+
+.schedule {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: flex-start;
+	border-top: 1px solid rgba(0,0,0,0.1);
+	height: 200px;
+}
+
+.panel-description {
+	padding-top: 0;
+}
+
+.schedule-index {
+	font-size: 30px;
+	width: 30px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.schedule > button {
+	margin: auto 10%;
+}
+
+.jslider {
+	min-width: 300px;
+	width: 70%;
+	margin: auto;
+}
+
+.jslider div.jslider-value {
+	background: #fafafa;
+	font-size: 15px;
+}
+
+.datepicker-container {
+	width: 20%;
+	border-right: 1px solid rgba(0,0,0,0.1);
+	display: flex;
+  	justify-content: center;
+  	flex-direction: column;
+}
+
+.datepicker {
+    font-size: 25px;
+    transition: transform .22s ease-in-out;
+    background-color: transparent !important;
+}
+
+.datepicker:hover {
+	transform: scale(1.1);
+}
+
+#profile {
+	display: flex;
+	flex-flow: column wrap;
+	margin-top: 45px;
+}
+.field-name {
+	margin-right: 20px;
+    font-size: 25px;
+    color: #FF9E51;
+    display: inline-block;
+}
+
+.field {
+	margin: auto;
+}
+#profile .mdl-textfield.is-focused > .mdl-textfield__input  {
+	border-color: #FF9E51;
+}
+
+#profile .mdl-textfield {
+	max-width: 75%;
+}
+
+@media screen and (max-width: 350px) {
+    #profile .mdl-textfield__input {
+    	text-align: center;
+    }
+}
+
+
+#done-panel .panel-description {
+	margin: auto;
+	font-size: 45px;
+}
+
+#done-panel .panel-title {
+	font-size: 45px;
+	background-color: rgba(111, 216, 111, 0.68);
+}
+#done-panel .panel-title > .material-icons {
+	color: green;
+}
+
+#done-panel .material-icons {
+	font-size: 45px
+}

@@ -7,12 +7,13 @@ var router = express.Router();
 
 module.exports = function( userCollection, auth ){
 
-    router.get( '/login', function( req, res, next ){
+    router.post( '/login', function( req, res, next ){
         var reqFbId = req.query.fb_id;
         var token = req.query.access_token;
         var appSecret = fbConfig.appId + "|" + fbConfig.appSecret;
         var data = "";
-        
+
+        // Call FB API to check access token
         https.get( "https://graph.facebook.com/debug_token?input_token=" + token +
                    "&access_token=" + appSecret, function( res ){
                        res.on( "data", function(chunk){

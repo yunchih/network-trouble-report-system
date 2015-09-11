@@ -85,7 +85,7 @@ var config = {
         'phone': /09\d{8}/
     },
 
-    validateLength: 32
+    validateLength: 16
 };
 
 

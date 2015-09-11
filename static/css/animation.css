@@ -1,0 +1,72 @@
+
+.animation-fadeIn.ng-enter {
+  animation: none;  /*Cancel out the inheritted animation*/
+  transition: 700ms ease-in-out all;
+  opacity:0;
+}
+.animation-fadeIn.ng-enter-stagger {
+  /* this will have a 100ms delay between each successive leave animation */
+  transition-delay: 0.1s;
+
+  /* As of 1.4.4, this must always be set: it signals ngAnimate
+    to not accidentally inherit a delay property from another CSS class */
+  transition-duration: 0s;
+}
+.animation-fadeIn.ng-enter.ng-enter-active {
+  /* standard transition styles */
+  opacity:1;
+}
+.animation-slide {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+.animation-slide.ng-enter,
+.animation-slide.ng-leave {
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.animation-slide.ng-enter {
+    left: 155%;
+}
+.animation-slide.ng-enter-active {
+    left: 0;
+}
+.animation-slide.ng-leave {
+    left: 0;
+}
+.animation-slide.ng-leave-active {
+    left: -155%;
+}
+
+
+.animation-slideDown {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+.animation-slideDown.ng-enter,
+.animation-slideDown.ng-leave {
+    -webkit-transition: all 1s ease;
+    transition: all 1s ease;
+}
+.animation-slideDown.ng-enter {
+    top: -100%;
+}
+.animation-slideDown.ng-enter-active {
+    top: 0;
+}
+.animation-slideDown.ng-leave {
+    top: 0;
+}
+.animation-slide.ng-leave-active {
+    top: -100%;
+}
+
+
+.animation-pop.ng-hide-add {
+  -webkit-animation:0.8s hide;
+  animation:0.8s hide;
+}

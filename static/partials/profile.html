@@ -1,0 +1,124 @@
+<style>
+	#profile {
+	    text-align: center;
+	}
+
+	#username {
+		margin: 0 auto;
+	}
+	#profile .mdl-card__title  {
+		box-shadow: none;
+	}
+
+	.field {
+		margin-bottom: 25px;
+	}
+	.field-name , .field-input {
+		display: inline-block;
+		vertical-align: baseline;
+	}
+
+	.field-input {
+		max-width: 75%;
+	}
+	.field-name {
+		margin-right: 20px;
+	    font-size: 25px;
+	    color: #FF9E51;
+	    width: 100px;
+		text-align: right;
+	}
+	.field-name.input-has-error {
+		color: red;
+	}
+
+	.mdl-textfield {
+		padding: 0;
+		/*margin-bottom: 20px;*/
+	}
+	.input-has-error.mdl-textfield__input {
+		border-bottom: 2px solid red !important;
+	}
+	.field-input.is-focused > .mdl-textfield__input  {
+		border-color: #FF9E51;
+	}
+
+	#form-body {
+		margin-bottom: 27px
+	}
+	#submit {
+   		font-size: 30px;
+	    padding: 20px;
+	    margin-bottom: 12px;
+	    background-color: transparent;
+	    border: none;
+	    transition: background-color 0.3s ease-out;
+	}
+
+	#submit:hover {
+		background-color: rgba(158, 158, 158, 0.2);
+	}
+	#submit .mdl-spinner {
+		width: 25px;
+		height: 25px;
+	}
+	#form-error-message {
+		color: red;
+	}
+	
+	@media screen and (max-width: 600px) {
+	    .field-name , .field-input>.mdl-textfield__input {
+	    	text-align: center;
+	    }
+	}
+</style>
+<div class="mdl-card mdl-shadow--2dp" id="profile" ng-controller="profileController">
+	<div class="mdl-card__title">
+		<h1 class="accent" id="username">{{ currentUser.name }}</h1>
+	</div>
+	<form name="profileForm" novalidate ng-submit="updateProfile(profileForm)" >
+
+		<div id="form-body">
+			<div class="field" ng-repeat="(fieldKey, fieldName) in fieldMappings">
+				<ng-form name="profileField">
+					<span 
+						class="field-name"
+						ng-class="{ 'input-has-error' : submitted && profileField.field.$invalid }">
+						{{ fieldName }}
+					</span>
+					<div class="field-input mdl-textfield mdl-js-textfield">
+						<input class="mdl-textfield__input" 
+						type="text" 
+						name="field" 
+						ng-model="profile[ fieldKey ]" 
+						ng-pattern="profilePatterns[ fieldName ]"
+						ng-class="{ 'input-has-error' : submitted && profileField.field.$invalid }"
+						required/>
+					</div>
+				</ng-form>
+			</div>
+		</div>
+			
+		<div class="mdl-card-footer-button mdl-card__actions mdl-card--border"></div>
+
+		
+		
+		<button type="submit" id="submit" >
+			<span>
+				更新資料
+			</span>
+			<span ng-switch on="submissionStatus">
+				<i ng-switch-when="done" style="font-size: 30px; color: green" class="material-icons">done</i>
+				<div ng-switch-when="pending" class="mdl-spinner mdl-js-spinner is-active" ></div>
+			</span>
+		</button>
+		
+		
+		<p class="animation-pop" id="form-error-message" 
+			ng-show="submitted && profileForm.$invalid" >
+			請確認所有資料格式正確
+		</p>
+	</form>
+	
+</div>
+

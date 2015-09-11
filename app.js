@@ -18,28 +18,27 @@ var bodyParser = require("body-parser");
 var user = require('./middlewares/user.js');
 var report = require( './middlewares/report.js' );
 var register = require( './middlewares/register.js' );
-var morgan = require('morgan');
-
-
 
 database.init( function( db ){
     
     app.use(express.static('static'));
 
-    app.use(morgan('dev'));
-    
-    app.use( '/api/1.0/auth', fbAuth(db.collection('users'), auth) );
-    
-    app.use( auth.session );
-    app.use( auth.verify );
+    app.use( '/api/1.0', (function(){
+        var router = express.Router();
+        router.use( '/auth', fbAuth(db.collection('users'), auth) );
 
-    app.get( '/api/1.0/auth/renew', auth.renew );
+        router.use( auth.session );
+        router.use( auth.verify );
+
+        router.get( '/auth/renew', auth.renew );
+        
+        router.use( '/register', register(db.collection('users'), auth) );
+
+        router.use( '/user/', user(db.collection('users')) );
+        router.use( '/report/', report(db.collection('reports')) );
+        return router;
+    })());
     
-    app.use( '/api/1.0/register', register(db.collection('users'), auth) );
-
-    app.use( '/api/1.0/user/', user(db.collection('users')) );
-    app.use( '/api/1.0/report/', report(db.collection('reports')) );
-
     app.use( function( req, res, next){
         res.status(404).json( {error: "Not found."} );
     });
