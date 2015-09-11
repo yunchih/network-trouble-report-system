@@ -33,6 +33,9 @@ module.exports = function( userCollection, auth ){
             }
             var tokenData = fbRes.data;
             var now = Date.now();
+            if( tokenData.error ){
+                return res.status(401).json( { error: "Invalid token." } );
+            }
             if( tokenData.expire_at > now ){
                 return res.json( { error: "Facebook token expired." } );
             }
