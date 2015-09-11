@@ -1,4 +1,2 @@
-*~
-config/fb-app.js*
-node_modules/*
-static/bower_components/*
+static/build
+static/build/*
