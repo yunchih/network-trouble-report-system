@@ -5,12 +5,12 @@ var config = require('../config/jwt.js');
 module.exports = function(){    
     var secret = crypto.randomBytes(config.keyLength, function(ex, buf) {
         if( ex ){
-            console.log("Error generate random secret");
+            console.log( (new Date()) + "Error generate random secret");
             return console.log( ex );
         }
         secret = buf;
         //console.log( secret.toString('base64') );
-        return console.log("Succefully generate random secret");
+        return console.log( (new Date()) + "Succefully generate random secret");
     });
 
     return  {        

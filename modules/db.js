@@ -19,7 +19,7 @@ module.exports = {
             if( err !== null ){            
                 return console.log("Error connect to db!!");
             }
-            console.log("Database connect successfully.");
+            console.log((new Date()) + "Database connect successfully.");
             return onConnect( db );
         });
     }
