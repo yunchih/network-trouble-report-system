@@ -1,0 +1,34 @@
+{
+  "name": "network-trouble-report-system",
+  "version": "1.0.0",
+  "description": "## Status",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CTinRay/network-trouble-report-system.git"
+  },
+  "author": "CTinray",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/CTinRay/network-trouble-report-system/issues"
+  },
+  "homepage": "https://github.com/CTinRay/network-trouble-report-system#readme",
+  "dependencies": {
+    "assert": "^1.3.0",
+    "body-parser": "^1.13.3",
+    "connect-mongo": "^0.8.2",
+    "crypto": "0.0.3",
+    "express": "^4.13.3",
+    "express-session": "^1.11.3",
+    "jsonwebtoken": "^5.0.5",
+    "mongodb": "^2.0.42",
+    "morgan": "^1.6.1",
+    "nodemailer": "^1.4.0",
+    "passport": "^0.3.0",
+    "passport-facebook": "^2.0.0"
+  },
+  "devDependencies": {}
+}
