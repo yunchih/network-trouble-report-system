@@ -5,34 +5,30 @@ angular
 	var apiBase = [ API.base , API.version ].join('/');
 	var api = API.api;
 	
-	var getAccessToken = function () {
-		var headers = {}
-        if (Session.token) {
-            headers.Authorization = 'Bearer ' + Session.token;
-        }
-        return headers;
+	var appendAccessToken = function (data) {
+		data.access_token = Session.token;
+        return data;
 	};
 
 	var GET_request = function (url_body) {
 		return $http({
-		    method: 'GET',
-		    url: apiBase + '/' + url_body,
-		    headers: getAccessToken()
+			method: 'GET',
+			url: apiBase + '/' + url_body,
+			params: appendAccessToken({})
 		});
 	};
 
-	var POST_request = function (url_body, data) {
+	var POST_request = function (url_body, data, token_not_required) {
 		return $http({
-		    method: 'POST',
-		    url: apiBase + '/' + url_body,
-		    headers: getAccessToken(),
-		    params: data
+			method: 'POST',
+			url: apiBase + '/' + url_body,
+			params: token_not_required ? data : appendAccessToken(data)
 		});
 	};
 
 	return {
 		login: function (userCredential) {
-			return POST_request( api.Login, userCredential );
+			return POST_request( api.Login, userCredential, true /* login does not require token */);
 		},
 		updateUserProfile: function (profile) {
 			return POST_request( api.UpdateUserProfile, profile );
