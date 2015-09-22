@@ -20,10 +20,10 @@ module.exports = function( userCollection, auth ){
                     return next( err );
                 }
                 if( result.length === 0 ){
-                    return res.json( {error: "student_id not belong to the drom"} );
+                    return res.json( {error: "student_id not belong to the drom", error_code: 1001001001 } );
                 }
                 if( result[0].fb_id ){
-                    return res.json( {error: "The student ID has been registered."} );
+                    return res.json( {error: "The student ID has been registered.", error_code: 1001001002} );
                 }
                 return recaptcha.verify( req.query.recaptcha, function( err, success ){
                     if( err !== null ){
@@ -50,7 +50,7 @@ module.exports = function( userCollection, auth ){
         delete req.query.agree;
         
         if( req.query.validate_code !== req.validationCode ){
-            return res.json( { error: "Validation code incorrect!"} );
+            return res.json( { error: "Validation code incorrect!", error_code: 1001001003 } );
         }
         delete req.query.validate_code;
 
