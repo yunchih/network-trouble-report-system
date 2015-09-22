@@ -16,7 +16,7 @@ function statusChangeCallback(response) {
                 access_token = JSON.parse(xmlhttp.responseText).access_token;
             }
         }
-        xmlhttp.open("GET","/api/1.0/auth/login?access_token=" + response.authResponse.accessToken + "&fb_id=" + response.authResponse.userID ,true);
+        xmlhttp.open("POST","/api/1.0/auth/login?access_token=" + response.authResponse.accessToken + "&fb_id=" + response.authResponse.userID ,true);
         xmlhttp.send();
         testAPI();
     } else if (response.status === 'not_authorized') {
