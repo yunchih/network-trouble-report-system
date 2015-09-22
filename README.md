@@ -173,9 +173,9 @@ Any request on APIs provided is welcomed.
     * If the field of student_id is empty:
       * `{ error: "student_id can not be empty" }`
     * If the student_id is not belong to the dorm:
-      * `{error: "student_id not belong to the drom"}`
+      * `{error: "student_id not belong to the drom", error_code: 1001001001}`
     * If the student_id has been registered:
-      * `{ error: "The student ID has been registered." }`
+      * `{ error: "The student ID has been registered.", error_code: 1001001002 }`
     * If the response of the recaptcha is invalid:
       * `{ error: "Invalid recaptcha response." }`
     * If the agree field is not true:
