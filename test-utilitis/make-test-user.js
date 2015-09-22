@@ -12,11 +12,10 @@ var fs = require("fs");
 
     var fbIds = JSON.parse( fs.readFileSync( './data/fb-ids.json' ).toString() );
     var names = JSON.parse( fs.readFileSync( './data/names.json' ).toString() );
-    var ids = generateStudentIds( nUsers );
-    var ipsF12 = generateIPs( Math.floor( nUsers / 2) + 1 );
-    var ipsF34 = generateIPs( Math.floor( nUsers / 2) + 1 );
-    var roomNumbers = generateRoomNumbers();
-    var studentIds = generateStudentIds();
+    var ipsF12 = generateIPs( 1 );
+    var ipsF34 = generateIPs( 3 );
+    var roomNumbers = generateRoomNumbers( );
+    var studentIds = generateStudentIds( nUsers );
 
     var users = [];
 
@@ -25,16 +24,15 @@ var fs = require("fs");
         var randInd = Math.floor( Math.random() * roomNumbers.length );
         var roomNumber = roomNumbers[randInd];
         roomNumbers.splice( randInd, 1 );
-        var ip = roomNumber <= 2 ? ipsF12.pop() : ipsF34.pop();
+        var ip = roomNumber[0] <= 2 ? ipsF12.pop() : ipsF34.pop();
         var user = {
             name: names[i],
             student_id: studentIds[i],
-            id: ids[i],
             room_number: roomNumber,
             ip: ip,
             fb_id: fbIds[i]
         };
-        console.log( user );
+        //console.log( user );
         users.push( user );        
     }
 
@@ -43,13 +41,14 @@ var fs = require("fs");
 })();    
 
 function generateStudentIds( n ){
-    var base = "B99";
+    var base = "B11";
     var codes = "123456789ABHJKQZ";
     var set = new Set();
-    while( set.length < n ){
+    while( set.size < n ){
         var codeInd = Math.floor( Math.random() * 1000 ) % codes.length;
         var code = codes[codeInd];
-        var rand5 = Math.floor( Math.random() * 100000 );
+        var rand5 = String(Math.floor( Math.random() * 100000 ));
+        while( rand5.length < 5 ) rand5 = '0' + rand5;
         var id = base + code + rand5 ;
         set.add( id );
     }
@@ -59,6 +58,8 @@ function generateStudentIds( n ){
     for( var id of set.values() ){
         ids.push( id );
     }
+
+    
     return ids;
 };
 
@@ -80,8 +81,8 @@ function generateIPs( floor ){
             ips.push( ip );
         }
     }
-
-    return ips;
+    
+    return ips.reverse();
 }
 
 
