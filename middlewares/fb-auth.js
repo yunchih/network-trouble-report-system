@@ -3,7 +3,7 @@ var querystring = require('querystring');
 var https = require('https');
 var express = require('express');
 var router = express.Router();
-
+var request = require( "request" );
 
 module.exports = function( userCollection, auth ){
 
@@ -11,25 +11,21 @@ module.exports = function( userCollection, auth ){
         var reqFbId = req.query.fb_id;
         var token = req.query.access_token;
         var appSecret = fbConfig.appId + "|" + fbConfig.appSecret;
-        var data = "";
 
         // Call FB API to check access token
-        https.get( "https://graph.facebook.com/debug_token?input_token=" + token +
-                   "&access_token=" + appSecret, function( res ){
-                       res.on( "data", function(chunk){
-                           chunk = chunk || "";
-                           data += chunk.toString();
-                       });                       
-                       return res.on( 'end', validate );
-                   }).on( 'error', function( err ){
-                       return next( err );
-                   });
+        request.get( "https://graph.facebook.com/debug_token?input_token=" + token +
+                     "&access_token=" + appSecret, function( err, status, data ){
+                         if( err !== null ){
+                             return console.log( err );
+                         }                         
+                         return validate(data);
+                     });
         
-        function validate(){
+        function validate(data){
             
             var fbRes = JSON.parse(data);
             if( fbRes.error ){
-                return next( Error( fbRes.error ) );
+                return next( Error( fbRes.error.toString() ) );
             }
             var tokenData = fbRes.data;
             var now = Date.now();
