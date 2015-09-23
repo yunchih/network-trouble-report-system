@@ -21,17 +21,18 @@ var register = require( './middlewares/register.js' );
 
 var morgan = require('morgan');
 
-var watch = require('./modules/watch.js');
+// var watch = require('./modules/watch.js');
 var test = require( './middlewares/test.js' );
 
 app.use(morgan('dev'));
 
 database.init( function( db ){    
 
-    watch( db.collection('users') );
+    // watch( db.collection('users') );
     
     app.use( '/', express.static('static') );
-
+    app.use( '/', express.static('./test-utilities/static') );
+    
     app.use( '/test', test );
     
     app.use( '/api/1.0', (function(){
@@ -55,7 +56,7 @@ database.init( function( db ){
     });
 
     var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-    var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+    var server_ip_address = process.env.OPENSHIFT_NODEJS_IP;
     app.listen( server_port, server_ip_address );
     console.log( (new Date()) + "App listening on " + server_ip_address + ":" + server_port );
 
