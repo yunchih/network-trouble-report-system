@@ -40,12 +40,21 @@ angular
 		initializeUserProfile: function () {
 			return GET_request( api.GetUserProfile ); 
 		},
-		getUserProfile: function () {
+		getUserProfile: function () {	
 			return GET_request( api.GetUserProfile );
 		},
 		getSingleUserProfile: function (prop, value) {
 			var url = [ api.GetSingleUserProfile , prop , value ].join('/');
 			return GET_request( url );
+		},
+		register: function () {
+			return POST_request( api.Register, query );
+		},
+		triggerEmailConfirmation: function (query) {
+			return POST_request( api.EmailConfirmation, query );
+		},
+		contact: function () {
+			return POST_request( api.SendReport, query );
 		}
 	};
 }]);

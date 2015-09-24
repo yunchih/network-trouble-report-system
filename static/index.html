@@ -38,7 +38,7 @@
                     <a href="/#/profile" ng-if="currentUser.name" id="navigation-username" class="mdl-navigation__link">
                         {{ $root.currentUser.name }}
                     </a>
-                    <a ng-repeat="nav in $root.navBar" class="mdl-navigation__link"  href="{{ nav.url }}">  
+                    <a ng-repeat="nav in $root.navBar" ng-click="routeAction(nav.title)" class="mdl-navigation__link"  href="{{ nav.url }}">  
                             {{ nav.title }}
                     </a>
                 </nav>
@@ -52,7 +52,7 @@
                         <a href="/#/profile" ng-if="currentUser.name" id="navigation-username" class="mdl-navigation__link">
                             {{ currentUser.name }}
                         </a>
-                        <a ng-repeat="nav in navBar" class="mdl-navigation__link"  href="{{ nav.url }}">  
+                        <a ng-repeat="nav in navBar" ng-click="routeAction(nav.title)"  class="mdl-navigation__link"  href="{{ nav.url }}">  
                             {{ nav.title }}
                         </a>
                     </nav>

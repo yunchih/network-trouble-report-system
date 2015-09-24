@@ -1,0 +1,75 @@
+<style>
+#confirm {
+  text-align: center;
+  width: 80%;
+  min-width: 300px;
+  max-width: 700px;
+  margin: 40px auto;
+}
+#confirm .accent {
+	font-size: 30px;
+	line-height: 50px;
+}
+#confirmBody {
+	margin: 25px auto 40px auto;
+}
+#confirmationStringContainer {
+	margin-right: 14px;
+}
+.confirm-field {
+	display: inline-block;
+}
+#resendContainer {
+	color: rgba(0,0,0,0.7);
+}
+
+#resendComplete {
+	color: green;
+	margin: 15px auto;
+}
+#resendError, #verifyFail {
+	color: red;
+	margin: 15px auto;
+}
+#reCAPTCHA {
+	margin: 20px auto 40px auto;
+	width: 304px;
+}
+</style>
+
+<div id="confirm" ng-controller="confirmController">
+    <div class="accent">我們已經將一串驗證碼寄至您的台大計中信箱<br/>請將該驗證碼複製<br/>在此貼上</div>
+    <div id="confirmBody">
+    	<div id="confirmationStringContainer" class="mdl-textfield mdl-js-textfield">
+			<input class="mdl-textfield__input confirm-field" type="text" id="confirmationString" ng-model="confirmationString" />
+			<label class="mdl-textfield__label confirm-field" for="confirmationString">請輸入驗證碼</label>
+		</div>
+	    <button ng-click="verifyConfirmationString()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+			確認
+		</button>
+
+		<div ng-show="wrongString" id="verifyFail" >驗證碼不正確</div>
+
+    </div>
+	
+    <div id="resendContainer" ng-hide="resend">
+    	<span id="resendMessage confirm-field">沒收到驗證碼嗎？</span>
+    	<button class="mdl-button mdl-js-button confirm-field" ng-click="resend.showPrompt = true" >重新發送驗證碼</button>
+    	<div id="{{ resend.status }}" >{{ resend.message }}</div>
+    </div>
+	<div id="confirm-recaptcha-container" ng-show="resend.showPrompt">
+		<div id="reCAPTCHA" 
+				vc-recaptcha 
+				key="'6LftjwwTAAAAAM8uKkShi-RbeZJhgEfamJCrRkJ4'" 
+				ng-class="{ 'warn': warnCAPTCHA }"
+				on-success="setCAPTCHA(response)"
+				on-expire="CAPTCHAexpired()"
+		></div>
+		<button ng-click="resendConfirmationString()" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+		  發送驗證碼
+		</button>
+	</div>
+	    
+
+</div>
+

@@ -5,6 +5,7 @@ angular
     function( $rootScope, $facebook, $q, $location, Identity, Request, Session ){
     
     var authorizedBy,
+        termOfService = false,
         registered = false,
         profile = {};
 
@@ -19,21 +20,18 @@ angular
     navbarLayout[Identity.authorizedBy.None] = [
         { 
             title: '登入',
-            url: '/#/login'
+            url: '/#/user/login'
         }
     ];
     navbarLayout[Identity.authorizedBy.FB] = [
         { 
             title: '登出',
-            url: '/#/logout'
+            url: '/#/',
         }
     ];
 
     navbarLayout[Identity.authorizedBy.Backend] = navbarLayout[Identity.authorizedBy.FB];
 
-    var loginBackend  = function(getFacebookProfilePromise) {
-        return getFacebookProfilePromise
-    };
     var getFacebookProfile = function () {
         return $facebook.api("/me").then(
             function (res) {
@@ -76,7 +74,47 @@ angular
         );
     };
 
-    this.agreeTermOfService = false;
+    this.sendConfirmationMail = function (_recaptcha) {
+        return Request.triggerEmailConfirmation({
+                student_id: profile.student_id,
+                recaptcha: _recaptcha || profile.recaptcha
+            }).then(
+
+                function () {
+                    $location.path('mailConfirm');
+                },
+
+                function (error) {
+                    return $q.reject( ErrorMessage(error.error_code) );
+                }
+            );
+    };
+
+    this.registerBackend = function (confirmationString) {
+        if( termOfService ){
+            
+            profile.agree = true;
+            profile.validate_code = confirmationString;
+
+            return Request.register(profile).then(
+                function (res) {
+                    console.log("Register Successfully!");
+                    registered = true;
+                    $location.path('/');
+                },
+                function (error) {
+                    return $q.reject( ErrorMessage(error.error_code) );
+                }
+            );
+        }
+        else{
+            $location.path('termOfService');
+        }
+    };
+
+    this.agreeTermOfService = function () {
+        termOfService = true;
+    };
 
     this.login = function ($scope) {
         var loginPromise = getFacebookProfile().then(
@@ -104,11 +142,12 @@ angular
         return loginPromise;
     };
 
-    this.logout = function () {
+    this.logout = function ($scope) {
+        console.log("User logs out");
         authorizedBy = Identity.authorizedBy.None;
         registered = false;
         profile = {};
-        $location.path('/');
+        setCurrentUser($scope, {});
     };
 
     this.getProfile = function () {
@@ -146,9 +185,15 @@ angular
     };
     this.setProfile = function (_profile) {
         profile = _profile;
-        return Request.updateUserProfile(_profile).then(function () {
-           console.log("Successfully update user profile"); 
-        });
+        if( registered ){
+            return Request.updateUserProfile(_profile).then(function () {
+               console.log("Successfully update user profile"); 
+            });
+        }
+        else{
+            return $location.path('confirm'); 
+        }
+            
     };
 
     this.getIdentity = function () {

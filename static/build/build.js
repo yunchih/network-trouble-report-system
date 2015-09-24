@@ -673,6 +673,10 @@ angular
         .when('/', {
             templateUrl: 'partials/welcome.html',
         })
+        .when('/user/:action', {
+            template: " ",
+            controller: 'userActionController'
+        })
         .when('/:page', {
             templateUrl: function (param) {
                 return 'partials/' + param.page + '.html';
@@ -726,10 +730,9 @@ angular
 
     $rootScope.$on('$locationChangeStart', function (event, nextURL, previousURL) {
         if( User.canAccessRestrictedRoute() ){
-            
             if( RestrictedRoute.indexOf(getLastUrlSegment(nextURL)) != -1 ){
 
-                console.log("You're accessing a restricted page: " + nextURL );
+                console.log("Accessing a restricted page: " + nextURL );
                 /* Save user's location to take him back to the same page after he has logged in */
                 $rootScope.savedLocation = getLastUrlSegment(previousURL);
 
@@ -770,7 +773,13 @@ angular
     
 })
         
-.controller( "mainController", [ '$scope', '$facebook', 'User', 'Session', function( $scope, $facebook, User, Session ){
+.controller( "mainController", [ '$scope', 'User', function( $scope, User ){
+
+    $scope.routeAction = function (action) {
+        if(action == '登出'){
+            User.logout($scope);
+        }
+    };
 
     $scope.resetTroubleshooter = function () {
         $scope.enquiry = {
@@ -801,13 +810,13 @@ angular
     api: {
         Login: "auth/login",
         /* 
-         * Format: /auth/login                                     
+         * Format: /auth/login  
          * Usage:  Login.  Return JWT to users
          * Method: POST
          */
         UpdateUserProfile: "user/current",
         /* 
-         * Format: /user/current                                     
+         * Format: /user/current   
          * Usage:  Update the profile of current login user
          * Method: POST
          */
@@ -819,22 +828,45 @@ angular
          */
         GetUserProfile: "user/current",
         /* 
-         * Format: /user/current                                      
+         * Format: /user/current
          * Usage:  Get the profile of current login user.
          * Method: GET
          */
         GetSingleUserProfile: "user", 
         /* 
-         * Format: /user/:prop/:value                                        
+         * Format: /user/:prop/:value      
          * Usage:  Get the profile of user(s) whose value of property :prop is :value. 
          * Method: GET
          */
-        GetAllUserSingleField: "user" 
+        SendReport: "report/current",
+        /* 
+         * Format: /report/current
+         * Usage:  Send a report to the network manager
+         * Method: POST
+         */
+         Register: "register",
+         /* 
+         * Format: /register
+         * Usage:  Register for an account
+         * Method: POST
+         */
+         EmailConfirmation: "register/mail"
+         /* 
+         * Format: /register/mail
+         * Usage:  Trigger the backend to send the confirmation number to user
+         * Method: POST
+         */
+         
     }
 })
 .constant("RestrictedRoute",[
-  ['profile']
+  /*  '/profile', '/contact'  */
 ])
+.constant("ErrorMessage",{
+    "1001001001": "您的學號不屬於男一舍喔！",
+    "1001001002": "您的學號已經在本系統註冊過了！",
+    "1001001003": "您的驗證碼不對喔！"
+})
 .constant("Profile",{
   patterns: {
     '電話': /^\d{10}$/i,
@@ -923,12 +955,21 @@ angular
 		initializeUserProfile: function () {
 			return GET_request( api.GetUserProfile ); 
 		},
-		getUserProfile: function () {
+		getUserProfile: function () {	
 			return GET_request( api.GetUserProfile );
 		},
 		getSingleUserProfile: function (prop, value) {
 			var url = [ api.GetSingleUserProfile , prop , value ].join('/');
 			return GET_request( url );
+		},
+		register: function () {
+			return POST_request( api.Register, query );
+		},
+		triggerEmailConfirmation: function (query) {
+			return POST_request( api.EmailConfirmation, query );
+		},
+		contact: function () {
+			return POST_request( api.SendReport, query );
 		}
 	};
 }]);
@@ -955,6 +996,81 @@ angular
 		
 });
 
+
+angular
+.module( "networkTroubleshooter")
+.service( "TimePicker", [ '$scope', 'Schedule', function( $scope, Schedule ){
+
+    function populateNextFewDays (numberOfDates) {
+        var weekDayName = ['日','一','二','三','四','五','六'];
+
+        var dates = ['今天','明天'], 
+            date = new Date();
+
+        var today = date.getDay(); // Get the today's weekday index
+
+        date.setDate( date.getDate() + dates.length );
+
+        for (var i = numberOfDates - dates.length ; i > 0; i--) {
+            var day = date.getDay(); // Get the weekday ( 0 to 6 )
+            if( day != 0 && day < today){
+                dates.push('下週' + weekDayName[day]);
+            }
+            else{
+                dates.push('本週' + weekDayName[day]);
+            }
+            date.setDate( date.getDate()+1 );
+        };
+
+        return dates;
+    }
+
+    function populateSchedule (schedule) {
+        var schedules = [];
+        for (var i = schedule.numOfSchedule - 1; i >= 0; i--) {
+            schedules.push({
+                date: '',
+                interval: schedule.startTime.toString() + ';' + schedule.endTime.toString()
+            });
+        };
+
+        return schedules;
+    }
+
+    function formatTime (time) {
+        var hour = Math.floor(time);
+        return {
+            hour: hour > 12 ? hour-12 : hour,
+            minute: Math.ceil(time) > hour ? '30' : '00',
+            PMorAM: hour >= 12 ? 'PM' : 'AM'
+        };
+    }
+
+    function transformTime(time) {
+        var formattedTime = formatTime(time);
+        return  formattedTime.hour + ':' + formattedTime.minute + ' ' + formattedTime.PMorAM
+    };
+
+    this.availableSchedules = populateSchedule(Schedule);
+    
+    this.dates = populateNextFewDays(Schedule.numOfDateToChooseFrom);
+
+    this.scheduleSliderOptions = {
+        from: 0,
+        to: 24,
+        step: 0.5,
+        round: 1,
+        skin: 'round' ,
+        scale: [ {val: 6,label:'早上'}, {val: 12, label:'中午'}, {val: '18', label:'傍晚'}],
+        modelLabels: transformTime
+    }
+
+    this.selectDate = function (_schedule, selectedDate) {
+        _schedule['date'] = selectedDate;
+    };
+
+}]);
+
 angular
 .module( "networkTroubleshooter")
 .service('User', 
@@ -962,6 +1078,7 @@ angular
     function( $rootScope, $facebook, $q, $location, Identity, Request, Session ){
     
     var authorizedBy,
+        termOfService = false,
         registered = false,
         profile = {};
 
@@ -976,21 +1093,18 @@ angular
     navbarLayout[Identity.authorizedBy.None] = [
         { 
             title: '登入',
-            url: '/#/login'
+            url: '/#/user/login'
         }
     ];
     navbarLayout[Identity.authorizedBy.FB] = [
         { 
             title: '登出',
-            url: '/#/logout'
+            url: '/#/',
         }
     ];
 
     navbarLayout[Identity.authorizedBy.Backend] = navbarLayout[Identity.authorizedBy.FB];
 
-    var loginBackend  = function(getFacebookProfilePromise) {
-        return getFacebookProfilePromise
-    };
     var getFacebookProfile = function () {
         return $facebook.api("/me").then(
             function (res) {
@@ -1033,7 +1147,47 @@ angular
         );
     };
 
-    this.agreeTermOfService = false;
+    this.sendConfirmationMail = function (_recaptcha) {
+        return Request.triggerEmailConfirmation({
+                student_id: profile.student_id,
+                recaptcha: _recaptcha || profile.recaptcha
+            }).then(
+
+                function () {
+                    $location.path('mailConfirm');
+                },
+
+                function (error) {
+                    return $q.reject( ErrorMessage(error.error_code) );
+                }
+            );
+    };
+
+    this.registerBackend = function (confirmationString) {
+        if( termOfService ){
+            
+            profile.agree = true;
+            profile.validate_code = confirmationString;
+
+            return Request.register(profile).then(
+                function (res) {
+                    console.log("Register Successfully!");
+                    registered = true;
+                    $location.path('/');
+                },
+                function (error) {
+                    return $q.reject( ErrorMessage(error.error_code) );
+                }
+            );
+        }
+        else{
+            $location.path('termOfService');
+        }
+    };
+
+    this.agreeTermOfService = function () {
+        termOfService = true;
+    };
 
     this.login = function ($scope) {
         var loginPromise = getFacebookProfile().then(
@@ -1061,11 +1215,12 @@ angular
         return loginPromise;
     };
 
-    this.logout = function () {
+    this.logout = function ($scope) {
+        console.log("User logs out");
         authorizedBy = Identity.authorizedBy.None;
         registered = false;
         profile = {};
-        $location.path('/');
+        setCurrentUser($scope, {});
     };
 
     this.getProfile = function () {
@@ -1103,9 +1258,15 @@ angular
     };
     this.setProfile = function (_profile) {
         profile = _profile;
-        return Request.updateUserProfile(_profile).then(function () {
-           console.log("Successfully update user profile"); 
-        });
+        if( registered ){
+            return Request.updateUserProfile(_profile).then(function () {
+               console.log("Successfully update user profile"); 
+            });
+        }
+        else{
+            return $location.path('confirm'); 
+        }
+            
     };
 
     this.getIdentity = function () {
@@ -1120,7 +1281,26 @@ angular
 
 angular
 .module( "networkTroubleshooter")
-.controller( "contactController", function( $scope, $location ){
+.controller( "contactController", [ "$scope", "$location", "Request", "TimePicker" , function( $scope, $location, Request, TimePicker ){
+
+    $scope.TimePicker = TimePicker;
+    $scope.words = "";
+
+    var exportTimeInterval = function (intervalString) {
+        var interval = intervalString.split(';');
+        if( intervalString && interval.length )
+            return { start: interval[0], end: interval[1] };
+
+        return { start: "0", end: "0" };
+    };
+
+    var exportContactInfo = function () {
+        var schedule = $scope.TimePicker.availableSchedules;
+        var time = exportTime({
+            date: schedule.date,
+            interval: exportTimeInterval(schedule.interval)
+        });  
+    } ;
 
     var first = { 
         title: '重新進行疑難排解',
@@ -1135,25 +1315,29 @@ angular
     var last = {
         title: '完成',
         action: function () {
+
+            Request.contact();
+            
             $location.path('/');
         }
     };
+
 
     /* A list of necessary result entry used in contact page */
     /* The name of entry must correspond to id of its ng-template */
 
     $scope.resultEntries = [
-        { 
+        {
             id: 'report',
             title: '疑難排解報告'
         },
         {
-            id: 'pickTime',
-            title: '有空時間'
-        },
-        {
             id: 'confirmProfile',
             title: '聯絡方式'
+        },
+        {
+            id: 'pickTime',
+            title: '有空時間'
         },
         {
             id: 'moreWords',
@@ -1200,17 +1384,7 @@ angular
             return last.title;
     };
 
-    $scope.setCAPTCHA = function (res) {
-        $scope.profile.recaptcha = res;
-        $scope.warnCAPTCHA = false;
-    };
-    $scope.CAPTCHAexpired = function() {
-        $scope.profile.recaptcha = '';
-        $scope.warnCAPTCHA = true;
-    };
-
-
-});
+}]);
 angular
 .module( "networkTroubleshooter")
 .controller( "loginController", function( $scope, $facebook , $q , $location , User ){
@@ -1253,9 +1427,75 @@ angular
 });
 angular
 .module( "networkTroubleshooter")
+.controller( "confirmController", [ "$scope",  "User", function( $scope, User ){
+
+	var recaptcha = "";
+
+	$scope.confirmationString = "";
+
+	$scope.wrongString = false;
+
+	$scope.resend = {
+		showPrompt: false,
+		status: '',
+		message: ''
+	};
+
+	var resendSuccess = {
+		showPrompt: false,
+		status: 'resendComplete',
+		message: '驗證碼已經寄送'
+	};
+	var resendFail = {
+		showPrompt: false,
+		status: 'resendError'
+	};
+
+	$scope.verifyConfirmationString = function () {
+		$scope.resendComplete = false;
+		if( $scope.confirmationString ){
+			User.registerBackend( $scope.confirmationString ).then(
+				function (res) {
+					// has been redirected
+				},
+				function (error_msg) {
+					$scope.wrongString = true;
+				}
+			);
+		}
+		else{
+			$scope.wrongString = true;
+		}
+
+	};
+
+	$scope.resendConfirmationString = function () {
+		if( recaptcha ){
+			User.sendConfirmationMail(recaptcha).then(
+				function (res) {
+					$scope.resend = resendSuccess;
+				},
+				function (error_msg) {
+					$scope.resend = resendFail;
+					$scope.resend.message = error_msg;
+				}
+			);
+		}
+	};
+
+	$scope.setCAPTCHA = function (res) {
+		recaptcha = res;
+	};
+
+	$scope.CAPTCHAexpired = function() {
+		recaptcha = "";
+    };
+}]);
+angular
+.module( "networkTroubleshooter")
 .controller('profileController', 
-	['$scope', '$routeParams', 'Profile','User', 'vcRecaptchaService',
-	function( $scope, $routeParams, Profile, User, vcRecaptchaService ){
+	['$scope', 'Profile','User', 'vcRecaptchaService',
+	function( $scope, Profile, User, vcRecaptchaService ){
 
 	$scope.profile = {};
 	$scope.fieldMappings = Profile.mappings;
@@ -1263,24 +1503,20 @@ angular
 	$scope.submitted = false;
 	$scope.submissionStatus = '';
 
-	var register = $routeParams.register ? true : false;
-
 	User.getProfile().then(function (profile) {
 		$scope.profile = profile;
 	});
 
- 	$scope.setCAPTCHA = function (res) {
- 		$scope.profile.recaptcha = res;
- 		$scope.warnCAPTCHA = false;
- 	};
+	$scope.setCAPTCHA = function (res) {
+		$scope.profile.recaptcha = res;
+		$scope.warnCAPTCHA = false;
+	};
 	$scope.CAPTCHAexpired = function() {
-    	$scope.profile.recaptcha = '';
-    	$scope.warnCAPTCHA = true;
+		$scope.profile.recaptcha = '';
+		$scope.warnCAPTCHA = true;
     };
 
 	$scope.updateProfile = function (form) {
-
-		console.log("Submitting profile");
 
 		if( !$scope.profile.recaptcha ){
 			$scope.warnCAPTCHA = true;
@@ -1292,7 +1528,6 @@ angular
 			User.setProfile($scope.profile).then(function () {
 				$scope.submissionStatus = 'done';
 			});	
-			
 		}
 		else{
 			$scope.submitted = true;
@@ -1329,80 +1564,8 @@ angular
 	function( $scope, User ){
 
 	$scope.agree = function () {
-		User.agreeTermOfService = true;		
+		User.agreeTermOfService();		
 	};
-
-}]);
-
-function populateNextFewDays (numberOfDates) {
-    var weekDayName = ['日','一','二','三','四','五','六'];
-
-    var dates = ['今天','明天'], 
-        date = new Date();
-
-    var today = date.getDay(); // Get the today's weekday index
-
-    date.setDate( date.getDate() + dates.length );
-
-    for (var i = numberOfDates - dates.length ; i > 0; i--) {
-        var day = date.getDay(); // Get the weekday ( 0 to 6 )
-        if( day != 0 && day < today){
-            dates.push('下週' + weekDayName[day]);
-        }
-        else{
-            dates.push('本週' + weekDayName[day]);
-        }
-        date.setDate( date.getDate()+1 );
-    };
-
-    return dates;
-}
-
-function populateSchedule (schedule) {
-    var schedules = [];
-    for (var i = schedule.numOfSchedule - 1; i >= 0; i--) {
-        schedules.push({
-            date: '',
-            scheduleSliderString: schedule.startTime.toString() + ';' + schedule.endTime.toString()
-        });
-    };
-
-    return schedules;
-}
-
-function formatTime (time) {
-    var hour = Math.floor(time);
-    return {
-        hour: hour > 12 ? hour-12 : hour,
-        minute: Math.ceil(time) > hour ? '30' : '00',
-        PMorAM: hour >= 12 ? 'PM' : 'AM'
-    };
-}
-
-function transformTime(time) {
-    var formattedTime = formatTime(time);
-    return  formattedTime.hour + ':' + formattedTime.minute + ' ' + formattedTime.PMorAM
-};
-
-angular
-.module( "networkTroubleshooter")
-.controller( "timepickerController", [ '$scope', 'Schedule', function( $scope, Schedule ){
-
-    $scope.selectDate = function (_schedule, selectedDate) {
-        _schedule['date'] = selectedDate;
-    };
-    
-    $scope.dates = populateNextFewDays(Schedule.numOfDateToChooseFrom);
-    $scope.availableSchedules = populateSchedule(Schedule);
-    $scope.scheduleSliderOptions = {
-        from: 0,
-        to: 24,
-        step: 0.5,
-        round: 1,
-        skin: 'round' ,
-        scale: [ {val: 6,label:'早上'}, {val: 12, label:'中午'}, {val: '18', label:'傍晚'}],
-        modelLabels: transformTime
-    }
 
 }]);
 angular

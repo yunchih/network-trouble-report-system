@@ -5,7 +5,7 @@ angular
 	function( $scope, User ){
 
 	$scope.agree = function () {
-		User.agreeTermOfService = true;		
+		User.agreeTermOfService();		
 	};
 
 }]);

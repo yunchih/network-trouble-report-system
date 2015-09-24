@@ -9,13 +9,13 @@ angular
     api: {
         Login: "auth/login",
         /* 
-         * Format: /auth/login                                     
+         * Format: /auth/login  
          * Usage:  Login.  Return JWT to users
          * Method: POST
          */
         UpdateUserProfile: "user/current",
         /* 
-         * Format: /user/current                                     
+         * Format: /user/current   
          * Usage:  Update the profile of current login user
          * Method: POST
          */
@@ -27,22 +27,45 @@ angular
          */
         GetUserProfile: "user/current",
         /* 
-         * Format: /user/current                                      
+         * Format: /user/current
          * Usage:  Get the profile of current login user.
          * Method: GET
          */
         GetSingleUserProfile: "user", 
         /* 
-         * Format: /user/:prop/:value                                        
+         * Format: /user/:prop/:value      
          * Usage:  Get the profile of user(s) whose value of property :prop is :value. 
          * Method: GET
          */
-        GetAllUserSingleField: "user" 
+        SendReport: "report/current",
+        /* 
+         * Format: /report/current
+         * Usage:  Send a report to the network manager
+         * Method: POST
+         */
+         Register: "register",
+         /* 
+         * Format: /register
+         * Usage:  Register for an account
+         * Method: POST
+         */
+         EmailConfirmation: "register/mail"
+         /* 
+         * Format: /register/mail
+         * Usage:  Trigger the backend to send the confirmation number to user
+         * Method: POST
+         */
+         
     }
 })
 .constant("RestrictedRoute",[
-  ['profile']
+  /*  '/profile', '/contact'  */
 ])
+.constant("ErrorMessage",{
+    "1001001001": "您的學號不屬於男一舍喔！",
+    "1001001002": "您的學號已經在本系統註冊過了！",
+    "1001001003": "您的驗證碼不對喔！"
+})
 .constant("Profile",{
   patterns: {
     '電話': /^\d{10}$/i,

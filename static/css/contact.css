@@ -2,16 +2,6 @@
 	background-color: #FFC107;
 	box-shadow: none;
 }
-#contact .mdl-data-table {
-}
-#contact td {
-	color: rgba(0,0,0,0.66);
-}
-#contact td:first-child {
-	color: black;
-}
-.result {
-}
 .panel-title {
 	text-align: center;
     position: relative;
@@ -96,9 +86,6 @@
 	position: relative;
 	border-top: 1px solid rgba(0,0,0,0.1);
 }
-.panel-description {
-	padding-top: 50px;
-}
 #noTroubleshootNotice {
 	text-align: center;
 }
@@ -109,10 +96,6 @@
 	justify-content: flex-start;
 	border-top: 1px solid rgba(0,0,0,0.1);
 	height: 200px;
-}
-
-.panel-description {
-	padding-top: 0;
 }
 
 .schedule-index {
@@ -160,15 +143,34 @@
 	flex-flow: column wrap;
 	margin-top: 45px;
 }
+#report-description {
+	text-align: center;
+	margin: 50px auto 50px auto;
+	padding-top: 50px;
+}
 .field-name {
 	margin-right: 20px;
-    font-size: 25px;
     color: #FF9E51;
-    display: inline-block;
+    text-align: right;
 }
 
+.field-content {
+	text-align: left;
+}
 .field {
-	margin: auto;
+	margin-bottom: 26px;
+}
+
+#report-description .field {
+	margin-bottom: 33px;
+}
+.field-name , .field-content {
+	display: inline-block;
+	vertical-align: baseline;
+	width: 42%;
+	min-width: 250px;
+	max-width: 500px;
+    font-size: 25px;
 }
 #profile .mdl-textfield.is-focused > .mdl-textfield__input  {
 	border-color: #FF9E51;
@@ -184,7 +186,15 @@
     }
 }
 
-
+#change-profile {
+	text-align: center;
+	margin-bottom: 50px;
+}
+#change-profile > button {
+	font-size: 30px;
+	padding: 20px;
+	height: auto;
+}
 #done-panel .panel-description {
 	margin: auto;
 	font-size: 45px;
@@ -214,4 +224,5 @@
 
 #moreWords-panel textarea {
 	width: 65%;
+	margin-bottom: 70px
 }

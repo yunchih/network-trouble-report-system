@@ -48,23 +48,13 @@
 	<h3 class="panel-title">
 		疑難排解報告
 	</h3>
-	<div class="panel-description">
-			<table ng-show="enquiryExportResult.length" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
-				<!-- 
-				<div id="table-header">
-					<thead>
-						<tr><td>疑難排解報告</td><td></td></tr>
-					</thead>
-				</div> 
-				-->
-					
-				<tbody>
-					<tr ng-repeat="enquiry in enquiryExportResult">
-						<td>{{ enquiry.question }}</td>
-						<td ng-bind-html="enquiry.answer"></td>
-					</tr>
-				</tbody>
-		    </table>
+	<div id="report-description" class="panel-description">
+			<section ng-show="enquiryExportResult.length">
+				<div class="field" ng-repeat="enquiry in enquiryExportResult">
+					<span class="field-name">{{ enquiry.question }}</span>
+					<span class="field-content" ng-bind-html="enquiry.answer"></span>
+				</div>
+		    </section>
 
 			<h3 id="noTroubleshootNotice" ng-hide="enquiry.historyList.length">您尚未進行疑難排解</h3>
 	</div>
@@ -80,7 +70,7 @@
 		請選三個您有空的時段
 	</h3>
 	<div class="panel-description">
-		<section class="schedule" ng-repeat="schedule in availableSchedules track by $index">
+		<section class="schedule" ng-repeat="schedule in TimePicker.availableSchedules track by $index">
 			<div class="datepicker-container">
 				<button id="datepicker_{{$index}}" class="mdl-button datepicker">
 				  {{ schedule['date'] || '請選一天' }}
@@ -88,13 +78,13 @@
 			</div>
 			<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect" for="datepicker_{{$index}}">
 			  <li class="mdl-menu__item" 
-			  	ng-repeat="condidateDate in dates" 
-			  	ng-click="selectDate(schedule, condidateDate)">
-			  		{{ condidateDate }}
+			  	ng-repeat="candidateDate in TimePicker.dates" 
+			  	ng-click="TimePicker.selectDate(schedule, candidateDate)">
+			  		{{ candidateDate }}
 			  </li>
 			</ul>
 			
-			<input class="timepicker" ng-model="schedule.scheduleSliderString" type="text" slider options="scheduleSliderOptions" />
+			<input class="timepicker" ng-model="schedule.interval" type="text" slider options="scheduleSliderOptions" />
 		</section>
 	</div>
 </div>
@@ -112,22 +102,34 @@
 		<div id="profile">
 			<div class="field">
 				<span class="field-name">學號</span>
-				<div class="mdl-textfield mdl-js-textfield">
-					<input class="mdl-textfield__input" type="text" id="studentID" value="B03902074" />
-				</div>
+				<span class="field-content mdl-textfield mdl-js-textfield">
+					B03902074
+				</span>
 			</div>
 			<div class="field">
-				<span class="field-name">手機</span>
-				<div class="mdl-textfield mdl-js-textfield">
-					<input class="mdl-textfield__input" type="tel" id="phone" value="0978229545"/>
-				</div>
-			</div>	
-			<div class="field">
-				<span class="field-name">房號</span>
-				<div class="mdl-textfield mdl-js-textfield">
-					<input class="mdl-textfield__input" type="text" id="roomID" value="229B"/>
-				</div>
+				<span class="field-name">學號</span>
+				<span class="field-content mdl-textfield mdl-js-textfield">
+					B03902074
+				</span>
 			</div>
+			<div class="field">
+				<span class="field-name">學號</span>
+				<span class="field-content mdl-textfield mdl-js-textfield">
+					B03902074
+				</span>
+			</div>
+			<div class="field">
+				<span class="field-name">學號</span>
+				<span class="field-content mdl-textfield mdl-js-textfield">
+					B03902074
+				</span>
+			</div>
+		</div>
+
+		<div id="change-profile">
+			<button class="mdl-button mdl-js-button">
+			  修改資料
+			</button>
 		</div>
 	</div>
 </div>
@@ -141,7 +143,7 @@
 		還有什麼話想跟我們說？
 	</h3>
 	<div class="panel-description">
-		<textarea type="text" rows="4" cols="10"></textarea>
+		<textarea ng-model="words" type="text" rows="4" cols="10"></textarea>
 	</div>
 	<h3 class="panel-title">
 		另外，想確認你是不是機器人…

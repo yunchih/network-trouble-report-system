@@ -21,6 +21,10 @@ angular
         .when('/', {
             templateUrl: 'partials/welcome.html',
         })
+        .when('/user/:action', {
+            template: " ",
+            controller: 'userActionController'
+        })
         .when('/:page', {
             templateUrl: function (param) {
                 return 'partials/' + param.page + '.html';
@@ -74,10 +78,9 @@ angular
 
     $rootScope.$on('$locationChangeStart', function (event, nextURL, previousURL) {
         if( User.canAccessRestrictedRoute() ){
-            
             if( RestrictedRoute.indexOf(getLastUrlSegment(nextURL)) != -1 ){
 
-                console.log("You're accessing a restricted page: " + nextURL );
+                console.log("Accessing a restricted page: " + nextURL );
                 /* Save user's location to take him back to the same page after he has logged in */
                 $rootScope.savedLocation = getLastUrlSegment(previousURL);
 
@@ -118,7 +121,13 @@ angular
     
 })
         
-.controller( "mainController", [ '$scope', '$facebook', 'User', 'Session', function( $scope, $facebook, User, Session ){
+.controller( "mainController", [ '$scope', 'User', function( $scope, User ){
+
+    $scope.routeAction = function (action) {
+        if(action == '登出'){
+            User.logout($scope);
+        }
+    };
 
     $scope.resetTroubleshooter = function () {
         $scope.enquiry = {
