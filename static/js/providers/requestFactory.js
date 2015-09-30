@@ -53,7 +53,7 @@ angular
 		triggerEmailConfirmation: function (query) {
 			return POST_request( api.EmailConfirmation, query );
 		},
-		contact: function () {
+		contact: function (query) {
 			return POST_request( api.SendReport, query );
 		}
 	};

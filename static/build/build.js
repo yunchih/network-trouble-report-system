@@ -673,10 +673,6 @@ angular
         .when('/', {
             templateUrl: 'partials/welcome.html',
         })
-        .when('/user/:action', {
-            template: " ",
-            controller: 'userActionController'
-        })
         .when('/:page', {
             templateUrl: function (param) {
                 return 'partials/' + param.page + '.html';
@@ -772,8 +768,15 @@ angular
 */ 
     
 })
-        
+
 .controller( "mainController", [ '$scope', 'User', function( $scope, User ){
+
+    // Global Variable inheritable by all scopes
+    $scope.enquiry = {};
+    $scope.contact = {
+        time: {},
+        words: ""
+    };
 
     $scope.routeAction = function (action) {
         if(action == '登出'){
@@ -912,7 +915,12 @@ angular
   notAuthenticated: 'auth-not-authenticated',
   notAuthorized: 'auth-not-authorized'
 });
+angular
+.module( "networkTroubleshooter")
+.factory('ContactService',['$http', 'API', 'Session', function($http, API, Session){
 
+
+}]);
 angular
 .module( "networkTroubleshooter")
 .factory('Request',['$http', 'API', 'Session', function($http, API, Session){
@@ -968,7 +976,7 @@ angular
 		triggerEmailConfirmation: function (query) {
 			return POST_request( api.EmailConfirmation, query );
 		},
-		contact: function () {
+		contact: function (query) {
 			return POST_request( api.SendReport, query );
 		}
 	};
@@ -999,7 +1007,7 @@ angular
 
 angular
 .module( "networkTroubleshooter")
-.service( "TimePicker", [ '$scope', 'Schedule', function( $scope, Schedule ){
+.service( "TimePicker", [ 'Schedule', function( Schedule ){
 
     function populateNextFewDays (numberOfDates) {
         var weekDayName = ['日','一','二','三','四','五','六'];
@@ -1032,7 +1040,7 @@ angular
                 date: '',
                 interval: schedule.startTime.toString() + ';' + schedule.endTime.toString()
             });
-        };
+        }
 
         return schedules;
     }
@@ -1048,7 +1056,37 @@ angular
 
     function transformTime(time) {
         var formattedTime = formatTime(time);
-        return  formattedTime.hour + ':' + formattedTime.minute + ' ' + formattedTime.PMorAM
+        return  formattedTime.hour + ':' + formattedTime.minute + ' ' + formattedTime.PMorAM;
+    }
+
+    function transformTimeInterval(intervalString) {
+        var interval = intervalString.split(';');
+        if( intervalString && interval.length )
+            return { start: interval[0], end: interval[1] };
+
+        return { start: "0", end: "0" };
+    }
+
+    this.export = function (schedules) {
+
+        var exportedSchedule = [];
+        var emptySchedule = true;
+        for (var i = schedules.length - 1; i >= 0; i--) {
+
+            if( schedules[i].date ){
+                emptySchedule = false;
+            }
+
+            exportedSchedule.push({ 
+                interval: transformTimeInterval(schedules[i].interval),
+                date: schedules[i].date
+            });
+        }
+
+        if( emptySchedule )
+            return "";
+        else
+            return exportedSchedule;
     };
 
     this.availableSchedules = populateSchedule(Schedule);
@@ -1063,7 +1101,7 @@ angular
         skin: 'round' ,
         scale: [ {val: 6,label:'早上'}, {val: 12, label:'中午'}, {val: '18', label:'傍晚'}],
         modelLabels: transformTime
-    }
+    };
 
     this.selectDate = function (_schedule, selectedDate) {
         _schedule['date'] = selectedDate;
@@ -1093,7 +1131,7 @@ angular
     navbarLayout[Identity.authorizedBy.None] = [
         { 
             title: '登入',
-            url: '/#/user/login'
+            url: '/#/login'
         }
     ];
     navbarLayout[Identity.authorizedBy.FB] = [
@@ -1131,11 +1169,19 @@ angular
 
                 Session.store( response.data.access_token, userFacebookCredential.access_token );
 
+                console.log("Login Backend Succeed! Res: ", response);
+
                 if( !response.registered ){
+
+                    console.log("The user has not registered");
+
                     registered = false;
                     $location.path('termOfService');
                 }
                 else {
+
+                    console.log("The user has registered");
+
                     registered = true;
                     // Take the user back to where he used to be.
                     $location.path( $rootScope.savedLocation );
@@ -1190,7 +1236,7 @@ angular
     };
 
     this.login = function ($scope) {
-        var loginPromise = getFacebookProfile().then(
+        return getFacebookProfile().then(
             function (FBidentity) {
                 setCurrentUser($scope, FBidentity);
 
@@ -1203,7 +1249,6 @@ angular
                 if( !userFacebookCredential.access_token || !userFacebookCredential.fb_id )
                     return $q.reject();
 
-                console.log("User credential", userFacebookCredential);
                 return loginBackend(userFacebookCredential);
             },
             function () {
@@ -1212,7 +1257,6 @@ angular
             }
         );
         
-        return loginPromise;
     };
 
     this.logout = function ($scope) {
@@ -1264,7 +1308,8 @@ angular
             });
         }
         else{
-            return $location.path('confirm'); 
+            $location.path('confirm');
+            return $q.when(); 
         }
             
     };
@@ -1281,25 +1326,31 @@ angular
 
 angular
 .module( "networkTroubleshooter")
-.controller( "contactController", [ "$scope", "$location", "Request", "TimePicker" , function( $scope, $location, Request, TimePicker ){
+.controller( "contactController", 
+    [ "$scope", "$location", "Request", "TimePicker" , 
+    function( $scope, $location, Request, TimePicker ){
 
-    $scope.TimePicker = TimePicker;
-    $scope.words = "";
-
-    var exportTimeInterval = function (intervalString) {
-        var interval = intervalString.split(';');
-        if( intervalString && interval.length )
-            return { start: interval[0], end: interval[1] };
-
-        return { start: "0", end: "0" };
-    };
+    $scope.contact.time = TimePicker;
 
     var exportContactInfo = function () {
-        var schedule = $scope.TimePicker.availableSchedules;
-        var time = exportTime({
-            date: schedule.date,
-            interval: exportTimeInterval(schedule.interval)
-        });  
+        var schedules = $scope.contact.time.availableSchedules;
+        var contact = {
+            user_available_time: TimePicker.export( schedules ),
+            description: $scope.contact.words,
+            issue: $scope.enquiry.export,
+            _id: $scope.currentUser.fb_id
+        };
+
+        if( contact.user_available_time ){
+            return { success: false, mesg: '請選擇您有空的時間' };
+        }
+        else if( contact._id ){
+            return { success: false, mesg: '請先登入' }
+        }
+
+        console.log("Exported contact info: ", angular.toJson( contact, false /* Disable JSON prettify option */));
+
+        return { success: true, mesg: angular.toJson( contact, false /* Disable JSON prettify option */)};
     } ;
 
     var first = { 
@@ -1316,9 +1367,27 @@ angular
         title: '完成',
         action: function () {
 
-            Request.contact();
-            
-            $location.path('/');
+            console.log("Contact Form Completed");
+
+            var exportedForm = exportedFormContactInfo();
+
+            if( exportedForm.success ){
+                alert(exportedForm.mesg);
+            }
+            else{
+                Request.contact(  exportedForm.mesg ).then(
+
+                    function () {
+                        alert('感謝您的回應，我們會盡快處理！');
+                        $location.path('/');
+                    },
+
+                    function () {
+                        alert('您的表單無法發送。請確認自己是否有登入。');
+                    }
+                );
+            }
+                
         }
     };
 
@@ -1553,7 +1622,7 @@ angular
         });
     };
 
-    $scope.enquiryExportResult = enquiryExport;
+    $scope.enquiry.export = enquiryExport;
 
 });
 
@@ -1572,6 +1641,12 @@ angular
 .module( "networkTroubleshooter")
 .controller( "troubleshooterController", function( $scope, $location ){
 
+    $scope.current_guide = {
+        show: false,
+        url: "",
+        name: ""
+    };
+
     $scope.gotoNextPage = function (url) {
         $location.path(url);
     };
@@ -1585,8 +1660,6 @@ angular
                window.componentHandler.upgradeDom();
             } , 100 );
 
-            console.log("Current Enquiry: " , $scope.enquiry.currentID);
-
         }
     };
 
@@ -1596,9 +1669,13 @@ angular
         window.setTimeout(  window.componentHandler.upgradeDom, 100 );
     };
 
-    $scope.showGuide = function (guide) {
-        $scope.guide_url = 'partials/' +  guide.url ;
-        $scope.guide_name = guide.name;
+    $scope.showGuide = function (_guide) {
+
+        $scope.current_guide.url = 'partials/guides/' +  _guide.url ;
+        $scope.current_guide.name = _guide.name;
+        $scope.current_guide.show = true;
+        
+        console.log("Guide URL: ", 'partials/guides/' +  _guide.url );
     };
 
 });

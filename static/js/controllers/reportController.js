@@ -16,6 +16,6 @@ angular
         });
     };
 
-    $scope.enquiryExportResult = enquiryExport;
+    $scope.enquiry.export = enquiryExport;
 
 });

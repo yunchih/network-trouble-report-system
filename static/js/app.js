@@ -21,10 +21,6 @@ angular
         .when('/', {
             templateUrl: 'partials/welcome.html',
         })
-        .when('/user/:action', {
-            template: " ",
-            controller: 'userActionController'
-        })
         .when('/:page', {
             templateUrl: function (param) {
                 return 'partials/' + param.page + '.html';
@@ -120,8 +116,15 @@ angular
 */ 
     
 })
-        
+
 .controller( "mainController", [ '$scope', 'User', function( $scope, User ){
+
+    // Global Variable inheritable by all scopes
+    $scope.enquiry = {};
+    $scope.contact = {
+        time: {},
+        words: ""
+    };
 
     $scope.routeAction = function (action) {
         if(action == '登出'){

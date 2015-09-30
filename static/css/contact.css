@@ -170,6 +170,7 @@
 	width: 42%;
 	min-width: 250px;
 	max-width: 500px;
+	line-height: 35px;
     font-size: 25px;
 }
 #profile .mdl-textfield.is-focused > .mdl-textfield__input  {
@@ -214,15 +215,10 @@
 
 #moreWords-panel {
 	text-align: center;
-	padding-top: 60px;
-}
-
-#moreWords-panel .panel-title {
-	background: none;
-	border: none;
 }
 
 #moreWords-panel textarea {
-	width: 65%;
-	margin-bottom: 70px
+	width: 80%;
+	margin: 50px;
+	height: 300px;
 }

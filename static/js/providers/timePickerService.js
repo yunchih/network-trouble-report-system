@@ -2,7 +2,7 @@
 
 angular
 .module( "networkTroubleshooter")
-.service( "TimePicker", [ '$scope', 'Schedule', function( $scope, Schedule ){
+.service( "TimePicker", [ 'Schedule', function( Schedule ){
 
     function populateNextFewDays (numberOfDates) {
         var weekDayName = ['日','一','二','三','四','五','六'];
@@ -35,7 +35,7 @@ angular
                 date: '',
                 interval: schedule.startTime.toString() + ';' + schedule.endTime.toString()
             });
-        };
+        }
 
         return schedules;
     }
@@ -51,7 +51,37 @@ angular
 
     function transformTime(time) {
         var formattedTime = formatTime(time);
-        return  formattedTime.hour + ':' + formattedTime.minute + ' ' + formattedTime.PMorAM
+        return  formattedTime.hour + ':' + formattedTime.minute + ' ' + formattedTime.PMorAM;
+    }
+
+    function transformTimeInterval(intervalString) {
+        var interval = intervalString.split(';');
+        if( intervalString && interval.length )
+            return { start: interval[0], end: interval[1] };
+
+        return { start: "0", end: "0" };
+    }
+
+    this.export = function (schedules) {
+
+        var exportedSchedule = [];
+        var emptySchedule = true;
+        for (var i = schedules.length - 1; i >= 0; i--) {
+
+            if( schedules[i].date ){
+                emptySchedule = false;
+            }
+
+            exportedSchedule.push({ 
+                interval: transformTimeInterval(schedules[i].interval),
+                date: schedules[i].date
+            });
+        }
+
+        if( emptySchedule )
+            return "";
+        else
+            return exportedSchedule;
     };
 
     this.availableSchedules = populateSchedule(Schedule);
@@ -66,7 +96,7 @@ angular
         skin: 'round' ,
         scale: [ {val: 6,label:'早上'}, {val: 12, label:'中午'}, {val: '18', label:'傍晚'}],
         modelLabels: transformTime
-    }
+    };
 
     this.selectDate = function (_schedule, selectedDate) {
         _schedule['date'] = selectedDate;

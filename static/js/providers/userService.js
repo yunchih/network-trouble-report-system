@@ -20,7 +20,7 @@ angular
     navbarLayout[Identity.authorizedBy.None] = [
         { 
             title: '登入',
-            url: '/#/user/login'
+            url: '/#/login'
         }
     ];
     navbarLayout[Identity.authorizedBy.FB] = [
@@ -58,11 +58,19 @@ angular
 
                 Session.store( response.data.access_token, userFacebookCredential.access_token );
 
+                console.log("Login Backend Succeed! Res: ", response);
+
                 if( !response.registered ){
+
+                    console.log("The user has not registered");
+
                     registered = false;
                     $location.path('termOfService');
                 }
                 else {
+
+                    console.log("The user has registered");
+
                     registered = true;
                     // Take the user back to where he used to be.
                     $location.path( $rootScope.savedLocation );
@@ -117,7 +125,7 @@ angular
     };
 
     this.login = function ($scope) {
-        var loginPromise = getFacebookProfile().then(
+        return getFacebookProfile().then(
             function (FBidentity) {
                 setCurrentUser($scope, FBidentity);
 
@@ -130,7 +138,6 @@ angular
                 if( !userFacebookCredential.access_token || !userFacebookCredential.fb_id )
                     return $q.reject();
 
-                console.log("User credential", userFacebookCredential);
                 return loginBackend(userFacebookCredential);
             },
             function () {
@@ -139,7 +146,6 @@ angular
             }
         );
         
-        return loginPromise;
     };
 
     this.logout = function ($scope) {
@@ -191,7 +197,8 @@ angular
             });
         }
         else{
-            return $location.path('confirm'); 
+            $location.path('confirm');
+            return $q.when(); 
         }
             
     };

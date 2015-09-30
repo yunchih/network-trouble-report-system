@@ -32,7 +32,7 @@ var model = model || { enquiryMap: {} };model.issueList = {  issue: {
     guides: [
       {
         name: "如何得知我的作業系統?",
-        url: "guides/check-os.html"
+        url: "check-os.html"
       }
     ],
     situation: [
@@ -160,7 +160,7 @@ var model = model || { enquiryMap: {} };model.issueList = {  issue: {
     guides: [
       {
         name: "IP 要怎麼查？",
-        url: "guides/check-ip.html"
+        url: "check-ip.html"
       }
     ],
     situation: [
@@ -214,7 +214,7 @@ var model = model || { enquiryMap: {} };model.issueList = {  issue: {
     guides: [
       {
         name: "如何註冊宿網？",
-        url: "guides/register.html"
+        url: "register.html"
       }
     ],
     situation: [
@@ -242,15 +242,15 @@ var model = model || { enquiryMap: {} };model.issueList = {  issue: {
     guides: [
       {
         name: "怎麼知道我是否已開啟 DHCP ?",
-        url: "guides/check-dhcp.html"
+        url: "check-dhcp.html"
       },
       {
         name: "怎麼開啟 DHCP?",
-        url: "guides/enable-dhcp.html"
+        url: "enable-dhcp.html"
       },
       {
         name: "怎麼知道我的 IP 是什麼?",
-        url: "guides/check-ip.html"
+        url: "check-ip.html"
       }
     ],
     situation: [
@@ -292,7 +292,7 @@ var model = model || { enquiryMap: {} };model.issueList = {  issue: {
     guides: [
       {
         name: "How to make my computer renew IP using DHCP?",
-        url: "guides/renew-dhcp.html"
+        url: "renew-dhcp.html"
       }
     ],
     situation: [
@@ -316,11 +316,11 @@ var model = model || { enquiryMap: {} };model.issueList = {  issue: {
     guides: [
       {
         name: "IP要怎麼查？",
-        url: "guides/check-register-ip.html"
+        url: "check-register-ip.html"
       },
       {
         name: "如何手動設 IP?",
-        url: "guides/set-ip.html"
+        url: "set-ip.html"
       }
     ],
     situation: [
@@ -339,7 +339,7 @@ var model = model || { enquiryMap: {} };model.issueList = {  issue: {
     guides: [
       {
         name: "如何下載計中防毒軟體？",
-        url: "guides/anti-virus.html"
+        url: "anti-virus.html"
       }
     ],
     enquiry: "你被計中鎖了！！原因八成是中毒。<br/>請裝一套防毒軟體，並對你的電腦做全身掃毒。若無防毒軟體，可以考慮使用<a  target='_blank' href='https://www.cc.ntu.edu.tw/chinese/services/serv_e04.asp'>計中提供的防毒軟體<i class='material-icons icon-external'>open_in_new</i></a>。<br/>掃完毒後，請聯絡網管。我們會幫你解鎖。如果你一天到晚被計中鎖，我們會建議你重灌。",
@@ -403,7 +403,7 @@ var model = model || { enquiryMap: {} };model.issueList = {  issue: {
     guides: [
       {
         name: "DNS 怎麼設？",
-        url: "guides/dns.html"
+        url: "dns.html"
       }
     ],
     situation: [

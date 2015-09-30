@@ -1,24 +1,30 @@
 angular
 .module( "networkTroubleshooter")
-.controller( "contactController", [ "$scope", "$location", "Request", "TimePicker" , function( $scope, $location, Request, TimePicker ){
+.controller( "contactController", 
+    [ "$scope", "$location", "Request", "TimePicker" , 
+    function( $scope, $location, Request, TimePicker ){
 
-    $scope.TimePicker = TimePicker;
-    $scope.words = "";
-
-    var exportTimeInterval = function (intervalString) {
-        var interval = intervalString.split(';');
-        if( intervalString && interval.length )
-            return { start: interval[0], end: interval[1] };
-
-        return { start: "0", end: "0" };
-    };
+    $scope.contact.time = TimePicker;
 
     var exportContactInfo = function () {
-        var schedule = $scope.TimePicker.availableSchedules;
-        var time = exportTime({
-            date: schedule.date,
-            interval: exportTimeInterval(schedule.interval)
-        });  
+        var schedules = $scope.contact.time.availableSchedules;
+        var contact = {
+            user_available_time: TimePicker.export( schedules ),
+            description: $scope.contact.words,
+            issue: $scope.enquiry.export,
+            _id: $scope.currentUser.fb_id
+        };
+
+        if( contact.user_available_time ){
+            return { success: false, mesg: '請選擇您有空的時間' };
+        }
+        else if( contact._id ){
+            return { success: false, mesg: '請先登入' }
+        }
+
+        console.log("Exported contact info: ", angular.toJson( contact, false /* Disable JSON prettify option */));
+
+        return { success: true, mesg: angular.toJson( contact, false /* Disable JSON prettify option */)};
     } ;
 
     var first = { 
@@ -35,9 +41,27 @@ angular
         title: '完成',
         action: function () {
 
-            Request.contact();
-            
-            $location.path('/');
+            console.log("Contact Form Completed");
+
+            var exportedForm = exportedFormContactInfo();
+
+            if( exportedForm.success ){
+                alert(exportedForm.mesg);
+            }
+            else{
+                Request.contact(  exportedForm.mesg ).then(
+
+                    function () {
+                        alert('感謝您的回應，我們會盡快處理！');
+                        $location.path('/');
+                    },
+
+                    function () {
+                        alert('您的表單無法發送。請確認自己是否有登入。');
+                    }
+                );
+            }
+                
         }
     };
 

@@ -153,24 +153,26 @@
 
     </tbody>
     </table>
-</div>
 
-<div ng-show="guide_url" id="guide" class="mdl-card mdl-shadow--2dp animation-pop">
-    
-    <div class="mdl-card__title">
+    <!-- The Guide Overlay -->
+    <div ng-show="current_guide.show" id="guide" class="mdl-card mdl-shadow--2dp animation-flip">
+        
+        <div class="mdl-card__title">
+            <div class="mdl-card-container">
+                <h1>{{ current_guide.name }}</h1>
+            </div>
+        </div> 
         <div class="mdl-card-container">
-            <h1>{{ guide_name }}</h1>
-        </div>
-    </div> 
-    <div class="mdl-card-container">
-        <div id="guide-description" >
-            <div ng-include="guide_url"></div>
-        </div>
-        <div id="guide-footer">
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
-                    ng-click="guide_url = ''">
-                Got it!
-            </button>                                        
+            <div id="guide-description" >
+                <div ng-include="current_guide.url"></div>
+            </div>
+            <div id="guide-footer">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+                        ng-click="current_guide.show = false">
+                    Got it!
+                </button>                                        
+            </div>
         </div>
     </div>
 </div>
+

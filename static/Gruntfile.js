@@ -69,8 +69,6 @@ module.exports = function(grunt) {
                   'js/providers/*.js',
                   'js/controllers/*.js',
 
-                  'js/mockBackend.js',
-
                   /* Google MDL */
                   'bower_components/material-design-lite/material.min.js'
                   ],
