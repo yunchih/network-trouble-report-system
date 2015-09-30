@@ -1,0 +1,162 @@
+<link rel="stylesheet" href="css/contact.css">
+
+<div class="mdl-card mdl-shadow--2dp" id="contact" ng-controller="contactController">
+	<div class="mdl-card__title">
+		<div class="mdl-card-container">
+			<h1 class="accent">確認資料</h1>
+		</div>
+	</div>
+	<div id="results">
+		
+		<div id="result-body" >
+			<div class="animation-fadeIn" ng-include src="resultEntries[resultIndex].id">
+				
+			</div>
+		</div>
+		<div id="result-footer" >
+			<div 
+				ng-class="{ hovered: previousHovered }"
+				ng-click="gotoPreviousResult()" 
+				ng-mouseover="previousHovered = true" 
+				ng-mouseleave="previousHovered = false"
+				class="navigation" id="previous">
+				<i id="navigation-icon-previous" class="material-icons navigation-icon">keyboard_arrow_left</i>
+				<span class="navigation-indicator">
+					{{ getPrevious() }}
+				</span>
+				
+			</div>
+			<div 
+				ng-class="{ hovered: nextHovered }"
+				ng-click="gotoNextResult()" 
+				ng-mouseover="nextHovered = true" 
+				ng-mouseleave="nextHovered = false"
+				class="navigation" id="next">
+				<span class="navigation-indicator">
+					{{ getNext() }}
+				</span>
+				<i id="navigation-icon-next" class="material-icons navigation-icon">keyboard_arrow_right</i>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/ng-template" id="report">
+
+<div class="result" ng-controller="reportController">
+	<h3 class="panel-title">
+		疑難排解報告
+	</h3>
+	<div id="report-description" class="panel-description">
+			<section ng-show="enquiry.export.length">
+				<div class="field" ng-repeat="entry in enquiry.export">
+					<span class="field-name">{{ entry.question }}</span>
+					<span class="field-content" ng-bind-html="entry.answer"></span>
+				</div>
+		    </section>
+
+			<h3 id="noTroubleshootNotice" ng-hide="enquiry.historyList.length">您尚未進行疑難排解</h3>
+	</div>
+</div>
+	
+
+</script>
+
+<script type="text/ng-template" id="pickTime">
+
+<div class="result" >
+	<h3 class="panel-title">
+		請選三個您有空的時段
+	</h3>
+	<div class="panel-description">
+		<section class="schedule" ng-repeat="schedule in contact.time.availableSchedules track by $index">
+			<div class="datepicker-container">
+				<button id="datepicker_{{$index}}" class="mdl-button datepicker">
+				  {{ schedule['date'] || '請選一天' }}
+				</button>
+			</div>
+			<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect" for="datepicker_{{$index}}">
+			  <li class="mdl-menu__item" 
+			  	ng-repeat="candidateDate in contact.time.dates" 
+			  	ng-click="contact.time.selectDate(schedule, candidateDate)">
+			  		{{ candidateDate }}
+			  </li>
+			</ul>
+			
+			<input class="timepicker" ng-model="schedule.interval" type="text" slider options="contact.time.scheduleSliderOptions" />
+		</section>
+	</div>
+</div>
+
+</script>
+
+<script type="text/ng-template" id="confirmProfile">
+
+
+<div class="result" >
+	<h3 class="panel-title">
+		請確認個人資料
+	</h3>
+	<div class="panel-description">
+		<div id="profile">
+			<div class="field">
+				<span class="field-name">學號</span>
+				<span class="field-content mdl-textfield mdl-js-textfield">
+					B03902074
+				</span>
+			</div>
+			<div class="field">
+				<span class="field-name">學號</span>
+				<span class="field-content mdl-textfield mdl-js-textfield">
+					B03902074
+				</span>
+			</div>
+			<div class="field">
+				<span class="field-name">學號</span>
+				<span class="field-content mdl-textfield mdl-js-textfield">
+					B03902074
+				</span>
+			</div>
+			<div class="field">
+				<span class="field-name">學號</span>
+				<span class="field-content mdl-textfield mdl-js-textfield">
+					B03902074
+				</span>
+			</div>
+		</div>
+
+		<div id="change-profile">
+			<button class="mdl-button mdl-js-button">
+			  修改資料
+			</button>
+		</div>
+	</div>
+</div>
+
+
+</script>
+
+<script type="text/ng-template" id="moreWords">
+<div class="result" id="moreWords-panel">
+	<h3 class="panel-title">
+		還有什麼話想跟我們說？
+	</h3>
+	<div class="panel-description">
+		<textarea ng-model="contact.words" type="text" rows="4" cols="10"></textarea>
+	</div>
+</div>
+</script>
+
+<script type="text/ng-template" id="done">
+<div class="result" id="done-panel">
+	<h3 class="panel-title">
+		<i class="material-icons">done</i> 
+		完成
+	</h3>
+	<div class="panel-description">
+		<i class="material-icons">send</i>
+		<span>送出</span>
+	</div>
+</div>
+</script>

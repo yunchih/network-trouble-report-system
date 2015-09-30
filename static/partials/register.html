@@ -1,0 +1,59 @@
+<link rel="stylesheet" href="css/profile.css">
+
+<div class="mdl-card mdl-shadow--2dp" id="profile" ng-controller="profileController">
+	<div style="background-color: rgba(255, 216, 0, 0.6); " class="mdl-card__title">
+		<div class="mdl-card-container">
+			<h1 class="accent">註冊</h1>
+		</div>
+	</div>
+	<form name="profileForm" id="register-form" novalidate ng-submit="updateProfile(profileForm)" >
+
+		<div id="form-body">
+			<div class="field" ng-repeat="(fieldKey, fieldName) in fieldMappings">
+				<ng-form name="profileField">
+					<span 
+						class="field-name"
+						ng-class="{ 'input-has-error' : submitted && profileField.field.$invalid }">
+						{{ fieldName }}
+					</span>
+					<div class="field-input mdl-textfield mdl-js-textfield">
+						<input class="mdl-textfield__input" 
+						type="text" 
+						name="field" 
+						ng-model="profile[ fieldKey ]" 
+						ng-pattern="profilePatterns[ fieldName ]"
+						ng-class="{ 'input-has-error' : submitted && profileField.field.$invalid }"
+						required/>
+					</div>
+				</ng-form>
+			</div>
+		</div>
+		<div id="reCAPTCHA" 
+			vc-recaptcha 
+			key="'6LftjwwTAAAAAM8uKkShi-RbeZJhgEfamJCrRkJ4'" 
+			ng-class="{ 'warn': warnCAPTCHA }"
+			on-success="setCAPTCHA(response)"
+			on-expire="CAPTCHAexpired()"
+		></div>
+		<div class="mdl-card-footer-button mdl-card__actions mdl-card--border"></div>
+
+		
+		<button type="submit" form="register-form" id="submit" >
+			<span>
+				確定 
+			</span>
+			<span ng-switch on="submissionStatus">
+				<i ng-switch-when="done" style="font-size: 30px; color: green" class="material-icons">done</i>
+				<div ng-switch-when="pending" class="mdl-spinner mdl-js-spinner is-active" ></div>
+			</span>
+		</button>
+		
+		
+		<p class="animation-pop" id="form-error-message" 
+			ng-show="submitted && profileForm.$invalid" >
+			請確認所有資料格式正確
+		</p>
+	</form>
+	
+</div>
+

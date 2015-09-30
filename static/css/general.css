@@ -1,0 +1,159 @@
+
+
+
+body, html {
+    font-size: 18px;
+    color: rgba(0,0,0,0.84);
+}
+
+h1 {
+    color: black;
+}
+
+.secondary {
+    color: rgba(0,0,0,0.55);
+}
+
+.material-icons.icon-external {
+    font-size: 18px;
+}
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+p {
+    font-size: 20px;
+    line-height: 32px;
+}
+
+.emphasize {
+    background-image: linear-gradient(to right, black 11%, rgba(255,255,255,0) 0%);
+    background-position: bottom;
+    background-size: 13px 1px;
+    padding-bottom: 4px;
+    background-repeat: repeat-x;
+}
+
+.emphasize {
+    color: #F74141;
+}
+h1.accent {
+    text-shadow: 1px 1px 1px white;
+}
+.mdl-data-table__cell--non-numeric {
+    padding-bottom: 12px !important;
+}
+
+#brand  {
+    color: #FFF;
+    text-shadow: 1px 1px 1px #000;
+    font-size: 25px;
+}
+
+#logo {
+    max-height: 80%;
+    max-width: 80%;
+    margin-right: 20px;
+}
+
+main {
+    width: 100%;
+}
+
+.enquiry-title.enquiry-history-title {
+    cursor: pointer;
+}
+
+
+.enquiry-table tr{
+    margin-top: 20px;
+    height: 0px !important;
+}
+
+.enquiry-table tr.ng-leave td,
+.enquiry-table tr.ng-enter td{
+    animation-timing-function: linear;
+    transition: all 0.2s;
+    overflow: hidden;   
+}    
+
+.enquiry-table tr.ng-leave td,
+.enquiry-table tr.ng-enter.ng-enter-active td{    
+    vertical-align: top;
+    line-height: 20px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    height: 48px;
+}
+
+.enquiry-table tr.ng-leave.ng-leave-active td,
+.enquiry-table tr.ng-enter td{
+    vertical-align: middle;
+    line-height: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px !important;
+    height: 0px;
+}
+
+.enquiry-description img{
+    width: 100%;
+}
+
+.enquiry-table {
+    margin-left: auto;
+    margin-right: auto;
+    table-layout: fixed;
+    white-space: normal;
+}
+
+.answers {
+    padding: 10px;
+}
+
+.answers .answer {
+    display: block;
+}
+
+.enquiry-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    letter-spacing: 3px;
+}
+
+.enquiry-description {
+    margin: 15px 0px 5px 0px;
+    font-size: 16px;
+}
+
+.answer label{
+    margin-bottom: 10px;
+}
+
+kbd {
+  font-size: 1em;
+  letter-spacing: 0.0625em;
+  display: inline-block;
+  padding: 3px 12px;
+  background: #fff;
+  border-radius: 0.1875em;
+  color: black;
+  text-decoration: none;
+  -moz-box-shadow: inset 0 -0.0625em 0.1875em #fff, inset 0 0 1em #fff, 0 0.0625em 0.0625em #e6e6e6, 0 0.125em 0.0625em #b3b3b3, 0 0.1875em 0.0625em gray, 0 0.0625em 0.0625em 0.0625em #999999, 0 0.0625em 0 0.125em #cccccc, 0 0.125em 0 0.125em #fff;
+  -webkit-box-shadow: inset 0 -0.0625em 0.1875em #fff, inset 0 0 1em #fff, 0 0.0625em 0.0625em #e6e6e6, 0 0.125em 0.0625em #b3b3b3, 0 0.1875em 0.0625em gray, 0 0.0625em 0.0625em 0.0625em #999999, 0 0.0625em 0 0.125em #cccccc, 0 0.125em 0 0.125em #fff;
+  box-shadow: inset 0 -0.0625em 0.1875em #fff, inset 0 0 1em #fff, 0 0.0625em 0.0625em #e6e6e6, 0 0.125em 0.0625em #b3b3b3, 0 0.1875em 0.0625em gray, 0 0.0625em 0.0625em 0.0625em #999999, 0 0.0625em 0 0.125em #cccccc, 0 0.125em 0 0.125em #fff;
+  margin: 0 5px;
+  transition: 0.2s;
+}
+
+code {
+    font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,sans-serif;
+    background-color: #eee;
+    font-size: 20px;
+    color: black;
+    border-radius: 3px;
+    padding: 5px 10px;
+    margin: 0px 3px;
+}

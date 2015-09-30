@@ -1,0 +1,126 @@
+
+.animation-fadeIn.ng-enter {
+  animation: none;  /*Cancel out the inheritted animation*/
+  transition: 700ms ease-in-out all;
+  opacity:0;
+}
+.animation-fadeIn.ng-enter-stagger {
+  /* this will have a 100ms delay between each successive leave animation */
+  transition-delay: 0.1s;
+
+  /* As of 1.4.4, this must always be set: it signals ngAnimate
+    to not accidentally inherit a delay property from another CSS class */
+  transition-duration: 0s;
+}
+.animation-fadeIn.ng-enter.ng-enter-active {
+  /* standard transition styles */
+  opacity:1;
+}
+.animation-slide {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+.animation-slide.ng-enter,
+.animation-slide.ng-leave {
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.animation-slide.ng-enter {
+    left: 155%;
+}
+.animation-slide.ng-enter-active {
+    left: 0;
+}
+.animation-slide.ng-leave {
+    left: 0;
+}
+.animation-slide.ng-leave-active {
+    left: -155%;
+}
+
+
+.animation-slideDown {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+.animation-slideDown.ng-enter,
+.animation-slideDown.ng-leave {
+    -webkit-transition: all 1s ease;
+    transition: all 1s ease;
+}
+.animation-slideDown.ng-enter {
+    top: -100%;
+}
+.animation-slideDown.ng-enter-active {
+    top: 0;
+}
+.animation-slideDown.ng-leave {
+    top: 0;
+}
+.animation-slideDown.ng-leave-active {
+    top: -100%;
+}
+
+/* when hiding the picture */
+.animation-flip.ng-hide-add         { animation:0.5s lightSpeedOut ease; }
+
+/* when showing the picture */
+.animation-flip.ng-hide-remove      { animation:0.5s slideInDown ease; }
+
+/* ANIMATIONS (FROM ANIMATE.CSS) ======================== */
+@-webkit-keyframes slideInDown {
+  from {
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+    visibility: visible;
+  }
+
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    -webkit-transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -100%, 0);
+    visibility: visible;
+  }
+
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+
+/* light speed out */
+@keyframes lightSpeedOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+    opacity: 0;
+  }
+}
+
+@keyframes lightSpeedOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+    opacity: 0;
+  }
+}

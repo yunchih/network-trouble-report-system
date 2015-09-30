@@ -1,0 +1,37 @@
+<style>
+#login {
+  text-align: center;
+}
+
+#login .subtitle{
+    margin-bottom: 30px;
+    line-height: 50px;
+}
+#facebook-login {
+    display: inline-block;
+    background-color: #33477a;
+    padding: 12px;
+    color: white;
+    padding-top: 16px;
+    font-size: 28px;
+}
+#facebook-login > img {
+    border-right: 1px solid rgba(255,255,255,0.4);
+    margin-right: 6px;
+    vertical-align: middle;
+    width: 45px;
+}
+</style>
+
+<div id="login" ng-controller="loginController">
+    <h1 class="accent">登入</h1>
+    <h4 class="subtitle">透過一則 Facebook 訊息<br/>網管可以在最短的時間內聯絡您<br/>解決您的問題。</h4>
+    <div class="g-recaptcha" data-sitekey="6LftjwwTAAAAAM8uKkShi-RbeZJhgEfamJCrRkJ4"></div>
+    <button ng-click="FBLogin()" id="facebook-login" >
+        <img src="images/facebook.png" alt="">
+        以 Facebook 登入
+    </button>
+</div>
+
+
+

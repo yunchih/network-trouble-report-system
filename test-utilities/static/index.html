@@ -1,1 +1,72 @@
 
+<!DOCTYPE html >
+<html  > <!--  manifest="manifest.appcache" -->
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- favicon -->
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+        <!-- CSS file -->
+        <!-- <link rel="stylesheet" href="build/build.css"> -->
+        <link rel="stylesheet" type="text/css" href='bower_components/normalize.css/normalize.css'>
+        <link rel="stylesheet" type="text/css" href='bower_components/material-design-lite/material.min.css'>
+        <link rel="stylesheet" type="text/css" href='bower_components/angular-awesome-slider/dist/css/angular-awesome-slider.min.css'>
+        <link rel="stylesheet" type="text/css" href='css/font.css'>
+        <link rel="stylesheet" type="text/css" href='css/general.css'>
+        <link rel="stylesheet" type="text/css" href='css/layout.css'>
+        <link rel="stylesheet" type="text/css" href='css/animation.css'>
+        <script src="build/issues.min.js"></script> 
+        <script src="build/build.js"></script> 
+
+        <title>男一舍網路維修系統</title>
+        <!-- <base href="/"> -->
+
+        <script
+            src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit"
+            async defer > </script>
+    </head>
+    <body 
+        ng-app="networkTroubleshooter"  
+        ng-controller="mainController" 
+        >
+
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout__header--waterfall">
+            <div class="mdl-layout__drawer mdl-layout--small-screen-only">
+                
+                <nav class="mdl-navigation">
+                    <a href="/#/profile" ng-if="currentUser.name" id="navigation-username" class="mdl-navigation__link">
+                        {{ $root.currentUser.name }}
+                    </a>
+                    <a ng-repeat="nav in $root.navBar" ng-click="routeAction(nav.title)" class="mdl-navigation__link"  href="{{ nav.url }}">  
+                            {{ nav.title }}
+                    </a>
+                </nav>
+            </div>
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title"><a id="brand" href="/#/">男一舍網路維修系統</a></span>
+
+                    <div class="mdl-layout-spacer"></div>
+                    <nav class="mdl-navigation mdl-layout--large-screen-only">
+                        <a href="/#/profile" ng-if="currentUser.name" id="navigation-username" class="mdl-navigation__link">
+                            {{ currentUser.name }}
+                        </a>
+                        <a ng-repeat="nav in navBar" ng-click="routeAction(nav.title)"  class="mdl-navigation__link"  href="{{ nav.url }}">  
+                            {{ nav.title }}
+                        </a>
+                    </nav>
+                </div>
+            </header>
+
+            
+        
+            <main id="body" class="mdl-layout__content" >
+                <div class="container mdl-cell mdl-cell--6-col mdl-cell--8-col-phone">
+                    <div class="animation-slide" ng-view></div>
+                </div>
+            </main>  
+
+        </div>
+    </body>
+</html>

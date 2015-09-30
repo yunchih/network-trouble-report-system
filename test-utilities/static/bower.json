@@ -1,16 +1,21 @@
 {
-  "name": "My API test utility",
+  "name": "Network Troubleshooter for Men's first dorm at NTU",
   "version": "0.0.0",
-  "homepage": "https://github.com/CTinRay/network-trouble-report-system",
+  "homepage": "https://github.com/yunchih/network-troubleshooter",
   "authors": [
-    "CTinray"
+    "CTinRay Yun-Chih-Chen"
   ],
-  "description": "nothing",
-  "main": "test-panel.html",
+  "description": "A user friendly network troubleshooter which help user fix their network on their own by answering series of questions",
+  "main": "index.html",
+  "moduleType": [
+    "node"
+  ],
   "keywords": [
-    "nothing"
+    "network",
+    "troubleshooter",
+    "guide"
   ],
-  "license": "GNU",
+  "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -19,7 +24,15 @@
     "tests"
   ],
   "dependencies": {
+    "angular-animate": "~1.4.5",
+    "angular-route": "~1.4.5",
     "angular-sanitize": "~1.4.5",
-    "angular": "~1.4.5"
+    "material-design-lite": "~1.0.4",
+    "normalize.css": "~3.0.3",
+    "angular-recaptcha": "~2.2.5"
+  },
+  "resolutions": {
+    "angular": "1.4.5",
+    "angular-touch": "~1.4.5"
   }
 }

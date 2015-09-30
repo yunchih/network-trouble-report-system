@@ -36,6 +36,8 @@ module.exports = function( userCollection, auth ){
                 return res.json( { error: "Facebook token expired." } );
             }
             if( tokenData.app_id !== fbConfig.appId ){
+                console.log("responding token : ", tokenData.app_id);
+                console.log("server token: ", fbConfig.appId);
                 return res.json( { error: "token of other App" } );
             }
             if( tokenData.is_valid !== true ){
