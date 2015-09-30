@@ -1214,12 +1214,15 @@ angular
             
             profile.agree = true;
             profile.validate_code = confirmationString;
-
+            /*
+                We assume that profile has already contained the following fields:
+                    name, room_number, ...., recaptcha
+            */
             return Request.register(profile).then(
                 function (res) {
                     console.log("Register Successfully!");
                     registered = true;
-                    $location.path('/');
+                    $location.path('/#/');
                 },
                 function (error) {
                     return $q.reject( ErrorMessage(error.error_code) );

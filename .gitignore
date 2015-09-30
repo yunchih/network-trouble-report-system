@@ -1,2 +1,4 @@
-static/build
-static/build/*
+./static/build
+./static/build/*
+./static/manifest.appcache
+
